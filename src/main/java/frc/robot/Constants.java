@@ -32,4 +32,9 @@ public final class Constants {
     }
 
 
+    public final class kTurret{
+        public static final int MAIN_MOTOR_ID = 0;
+
+    }
+
 }

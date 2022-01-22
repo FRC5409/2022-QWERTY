@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.shooter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +34,11 @@ public final class ShooterFlywheel extends SubsystemBase {
     HashMap<String, NetworkTableEntry> shuffleBoardFields;
 
     /**
-     * Constructs a Turret Flywheel subsystem.
+     * Constructs a flywheel subsystem. 
      */
     public ShooterFlywheel() {
         mot_main = new WPI_TalonFX(Constants.ShooterFlywheel.MAIN_MOTOR_ID);
+
         mot_follower = new WPI_TalonFX(Constants.ShooterFlywheel.FOLLOWER_MOTOR_ID);
         mot_follower.setInverted(true);
 
@@ -55,7 +56,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         flywheelLayout = Shuffleboard.getTab("Flywheel").getLayout("flywheelLayout", BuiltInLayouts.kList);
         shuffleBoardFields.put("targetRPM",
                 flywheelLayout.add("RPM target", rpmTarget).withWidget(BuiltInWidgets.kNumberSlider)
-                        .withProperties(Map.of("min", 0, "max", 1000, "blockincrement", 25)).getEntry());
+                        .withProperties(Map.of("min", 0, "max", 500, "blockincrement", 25)).getEntry());
         shuffleBoardFields.put("currentRPM", flywheelLayout.add("Current RPM", getRPM()).getEntry());
         shuffleBoardFields.put("subsystemEnabled", flywheelLayout.add("Subsystem Enabled: ", enabled).getEntry());
 
@@ -67,7 +68,6 @@ public final class ShooterFlywheel extends SubsystemBase {
     @Override
     public void periodic() {
         setRPMTarget(shuffleBoardFields.get("targetRPM").getDouble(50));
-        //shuffleBoardFields.get("targetRPM").setDouble(rpmTarget);
         shuffleBoardFields.get("currentRPM").setDouble(getRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
     }
@@ -79,22 +79,31 @@ public final class ShooterFlywheel extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         setRPMTarget(shuffleBoardFields.get("targetRPM").getDouble(50));
-        //shuffleBoardFields.get("targetRPM").setDouble(rpmTarget);
         shuffleBoardFields.get("currentRPM").setDouble(getRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
-        //System.out.println("periodic");
     }
 
+    /**
+     * Method for enabing the flywheel.
+     */
     public void enable() {
         enabled = true;
         setRPMTarget(rpmTarget);
     }
 
+    /**
+     * Method for disabling the flywheel.
+     */
     public void disable() {
         mot_main.set(ControlMode.Velocity, 0);
         enabled = false;
     }
 
+    /**
+     * Method that sets the target for the shooter flywheel.
+     * 
+     * @param target Target revolutions per minute.
+     */
     public void setRPMTarget(double target) {
         if (enabled) {
             rpmTarget = target;
@@ -103,32 +112,35 @@ public final class ShooterFlywheel extends SubsystemBase {
         }
     }
 
+    /**
+     * Method for getting if the target has been reached. 
+     * @return True if the target has been reached, false if not.
+     */
     public boolean isRPMTargetReached() {
         return Math.abs(getRPM() - rpmTarget) <= Constants.ShooterFlywheel.rpmTolerance;
     }
 
+    /**
+     * Method for getting the RPM of the main motor. 
+     * @return A double representing the RPM of the motor. 
+     */
     public double getRPM() {
         return mot_main.getSelectedSensorVelocity() * 600.0 / Constants.Falcon500.unitsPerRotation;
     }
 
+    /**
+     * Method for getting the current RPMTarget.
+     * @return A double representing the target RPM.
+     */
     public double getRPMTarget() {
         return rpmTarget;
     }
 
+    /**
+     * Method for getting if the subsystem is enabled.
+     * @return True if the subsystem is enabled, false if not. 
+     */
     public boolean isEnabled() {
         return enabled;
     }
-
-    public void incrementRPM() {
-        rpmTarget += 50;
-        setRPMTarget(rpmTarget);
-    }
-
-    public void reduceRPM() {
-        if (rpmTarget > 50) {
-            rpmTarget -= 50;
-            setRPMTarget(rpmTarget);
-        }
-    }
-
 }
