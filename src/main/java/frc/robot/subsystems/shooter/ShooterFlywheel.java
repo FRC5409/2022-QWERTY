@@ -69,7 +69,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         ShuffleboardLayout flywheelLayout = tab.getLayout("flywheelLayout", BuiltInLayouts.kList);
         shuffleBoardFields.put("targetRPM",
                 flywheelLayout.add("RPM target", rpmTarget).withWidget(BuiltInWidgets.kNumberSlider)
-                        .withProperties(Map.of("min", 0, "max", 6000, "blockincrement", 100)).getEntry());
+                        .withProperties(Map.of("min", 0, "max", 6000, "blockincrement", 500)).getEntry());
         shuffleBoardFields.put("currentRPM", flywheelLayout.add("Current RPM", getRPM()).getEntry());
         shuffleBoardFields.put("subsystemEnabled", flywheelLayout.add("Subsystem Enabled: ", enabled).getEntry());
         shuffleBoardFields.put("fluctuationGraph",
