@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.EnableShooter;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.TuningTesting;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.ShooterFlywheel;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -23,8 +25,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterFlywheel m_flywheel;
+  private final Indexer m_indexer = new Indexer();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final TuningTesting m_TuningTesting = new TuningTesting(m_indexer);
 
   // Define main joystick
   private final XboxController joystick_main; // = new XboxController(0);
@@ -35,6 +39,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
     joystick_main = new XboxController(0);
 
     // Init button binds
