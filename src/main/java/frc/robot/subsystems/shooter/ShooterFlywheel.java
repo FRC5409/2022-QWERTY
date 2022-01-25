@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 
@@ -32,7 +33,6 @@ public final class ShooterFlywheel extends SubsystemBase {
     boolean enabled;
 
     ShuffleboardTab tab;
-    ShuffleboardLayout flywheelLayout;
     HashMap<String, NetworkTableEntry> shuffleBoardFields;
 
     /**
@@ -47,7 +47,9 @@ public final class ShooterFlywheel extends SubsystemBase {
 
         mot_follower.setInverted(true);
         mot_main.setNeutralMode(NeutralMode.Coast);
+        mot_main.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
         mot_follower.setNeutralMode(NeutralMode.Coast);
+        mot_follower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
 
         mot_main.configIntegratedSensorAbsoluteRange(AbsoluteSensorRange.Unsigned_0_to_360);
         configPID(Constants.ShooterFlywheel.p, Constants.ShooterFlywheel.i, Constants.ShooterFlywheel.d,
@@ -58,14 +60,13 @@ public final class ShooterFlywheel extends SubsystemBase {
 
         mot_follower.follow(mot_main);
 
-
         //shuffleboard data initialization
         //this data is updated in periodic of this subsystem
 
         shuffleBoardFields = new HashMap<String, NetworkTableEntry>();
 
         tab = Shuffleboard.getTab("Flywheel");
-        flywheelLayout = tab.getLayout("flywheelLayout", BuiltInLayouts.kList);
+        ShuffleboardLayout flywheelLayout = tab.getLayout("flywheelLayout", BuiltInLayouts.kList);
         shuffleBoardFields.put("targetRPM",
                 flywheelLayout.add("RPM target", rpmTarget).withWidget(BuiltInWidgets.kNumberSlider)
                         .withProperties(Map.of("min", 0, "max", 6000, "blockincrement", 100)).getEntry());
@@ -82,7 +83,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         shuffleBoardFields.put("d", pidTuningLayout.add("D Const: ", Constants.ShooterFlywheel.d).getEntry());
         shuffleBoardFields.put("f", pidTuningLayout.add("F const: ", Constants.ShooterFlywheel.ff).getEntry());
         shuffleBoardFields.put("change", pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
-        shuffleBoardFields.put("graph", pidTuningLayout.add("Current vs Time", 0.0).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("visibletime", 10)).getEntry());
+        shuffleBoardFields.put("currentGraph", pidTuningLayout.add("Current vs Time", 0.0).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("visibletime", 10)).getEntry());
     }
 
     /**
@@ -94,7 +95,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         shuffleBoardFields.get("currentRPM").setDouble(getRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
         shuffleBoardFields.get("fluctuationGraph").setDouble(getRPM() - getRPMTarget());
-        shuffleBoardFields.get("graph").setDouble(mot_main.getStatorCurrent());
+        shuffleBoardFields.get("currentGraph").setDouble(mot_main.getStatorCurrent());
         if(shuffleBoardFields.get("change").getBoolean(false)){
             disable();
             mot_main.config_kP(0, shuffleBoardFields.get("p").getDouble(0));
@@ -116,7 +117,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         shuffleBoardFields.get("currentRPM").setDouble(getRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
         shuffleBoardFields.get("fluctuationGraph").setDouble(getRPM() - getRPMTarget());
-        shuffleBoardFields.get("graph").setDouble(mot_main.getStatorCurrent());
+        shuffleBoardFields.get("currentGraph").setDouble(mot_main.getStatorCurrent());
         if(shuffleBoardFields.get("change").getBoolean(false)){
             disable();
             mot_main.config_kP(0, shuffleBoardFields.get("p").getDouble(0));

@@ -31,7 +31,7 @@ public final class Constants {
         public static final int rpmTolerance = 1;
 
 
-        public static final double p = 0.07432;
+        public static final double p = 0.07032;
         public static final double i = 0;
         public static final double d = 0;
         public static final double ff= 0;
