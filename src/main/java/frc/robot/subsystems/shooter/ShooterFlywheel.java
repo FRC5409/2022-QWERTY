@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 
@@ -43,13 +44,19 @@ public final class ShooterFlywheel extends SubsystemBase {
 
         mot_main.configFactoryDefault();
         mot_follower.configFactoryDefault();
+
         mot_follower.setInverted(true);
+        mot_main.setNeutralMode(NeutralMode.Coast);
+        mot_follower.setNeutralMode(NeutralMode.Coast);
 
         mot_main.configIntegratedSensorAbsoluteRange(AbsoluteSensorRange.Unsigned_0_to_360);
         configPID(Constants.ShooterFlywheel.p, Constants.ShooterFlywheel.i, Constants.ShooterFlywheel.d,
                 Constants.ShooterFlywheel.ff);
+        
         enabled = false;
         rpmTarget = 0;
+
+        mot_follower.follow(mot_main);
 
 
         //shuffleboard data initialization
@@ -65,7 +72,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         shuffleBoardFields.put("currentRPM", flywheelLayout.add("Current RPM", getRPM()).getEntry());
         shuffleBoardFields.put("subsystemEnabled", flywheelLayout.add("Subsystem Enabled: ", enabled).getEntry());
         shuffleBoardFields.put("fluctuationGraph",
-                flywheelLayout.add("Fluctuation", getRPM() - getRPMTarget()).withWidget(BuiltInWidgets.kGraph)
+                flywheelLayout.add("RPM Fluctuation Graph", getRPM() - getRPMTarget()).withWidget(BuiltInWidgets.kGraph)
                         .withProperties(Map.of("visibletime", 10)).getEntry());
         
 
@@ -75,6 +82,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         shuffleBoardFields.put("d", pidTuningLayout.add("D Const: ", Constants.ShooterFlywheel.d).getEntry());
         shuffleBoardFields.put("f", pidTuningLayout.add("F const: ", Constants.ShooterFlywheel.ff).getEntry());
         shuffleBoardFields.put("change", pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
+        shuffleBoardFields.put("graph", pidTuningLayout.add("Current vs Time", 0.0).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("visibletime", 10)).getEntry());
     }
 
     /**
@@ -86,12 +94,14 @@ public final class ShooterFlywheel extends SubsystemBase {
         shuffleBoardFields.get("currentRPM").setDouble(getRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
         shuffleBoardFields.get("fluctuationGraph").setDouble(getRPM() - getRPMTarget());
+        shuffleBoardFields.get("graph").setDouble(mot_main.getStatorCurrent());
         if(shuffleBoardFields.get("change").getBoolean(false)){
             disable();
             mot_main.config_kP(0, shuffleBoardFields.get("p").getDouble(0));
             mot_main.config_kI(0, shuffleBoardFields.get("i").getDouble(0));
             mot_main.config_kD(0, shuffleBoardFields.get("d").getDouble(0));
             mot_main.config_kF(0, shuffleBoardFields.get("f").getDouble(0));
+            System.out.println("Pid configured");
             enable();
             shuffleBoardFields.get("change").setBoolean(false);
         }
@@ -106,12 +116,14 @@ public final class ShooterFlywheel extends SubsystemBase {
         shuffleBoardFields.get("currentRPM").setDouble(getRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
         shuffleBoardFields.get("fluctuationGraph").setDouble(getRPM() - getRPMTarget());
+        shuffleBoardFields.get("graph").setDouble(mot_main.getStatorCurrent());
         if(shuffleBoardFields.get("change").getBoolean(false)){
             disable();
             mot_main.config_kP(0, shuffleBoardFields.get("p").getDouble(0));
             mot_main.config_kI(0, shuffleBoardFields.get("i").getDouble(0));
             mot_main.config_kD(0, shuffleBoardFields.get("d").getDouble(0));
             mot_main.config_kF(0, shuffleBoardFields.get("f").getDouble(0));
+            System.out.println("Pid configured");
             enable();
             shuffleBoardFields.get("change").setBoolean(false);
         }
