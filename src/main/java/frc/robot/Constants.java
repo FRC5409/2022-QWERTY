@@ -14,17 +14,27 @@ package frc.robot;
  */
 public final class Constants {
 
+
+
+    public final class kDriveTrain{
+        public static final int left_front_id = 51;
+        public static final int left_rear_id = 52;
+        public static final int right_front_id = 53;
+        public static final int right_rear_id = 54;
+
+    }
+
     public final class ShooterFlywheel{
-        public static final int MAIN_MOTOR_ID = 0;
-        public static final int FOLLOWER_MOTOR_ID= 13;
+        public static final int MAIN_MOTOR_ID = 10;
+        public static final int FOLLOWER_MOTOR_ID= 7;
         
         public static final int rpmTolerance = 1;
 
 
-        public static final double p = 1;
-        public static final double i = 1;
-        public static final double d = 1;
-        public static final double ff= 1;
+        public static final double p = 0.42;
+        public static final double i = 0;
+        public static final double d = 0;
+        public static final double ff= 0;
     }
 
     public final class Falcon500{

@@ -6,8 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.EnableShooter;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +25,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterFlywheel m_flywheel;
+  //private final DriveTrain m_driveTrain;
+
+
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -30,7 +35,7 @@ public class RobotContainer {
   private final XboxController joystick_main; // = new XboxController(0);
   private final JoystickButton but_main_A, but_main_B, but_main_X, but_main_Y, but_main_LBumper, but_main_RBumper,
       but_main_LAnalog, but_main_RAnalog, but_main_Back, but_main_Start;
-  
+  //private final DefaultDrive defaultDrive;
       
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -50,6 +55,11 @@ public class RobotContainer {
     but_main_Start = new JoystickButton(joystick_main, XboxController.Button.kStart.value);
 
     m_flywheel = new ShooterFlywheel();
+    //m_driveTrain = new DriveTrain();
+
+    //defaultDrive = new DefaultDrive(m_driveTrain, joystick_main);
+    //m_driveTrain.setDefaultCommand(defaultDrive);
+
     // Configure the button bindings
     configureButtonBindings();
   }

@@ -1,0 +1,11 @@
+{
+  "SysId": {
+    "Analysis Type": "General Mechanism",
+    "AnalyzerJSONLocation": "C:\\Users\\Admin\\Documents\\GitHub\\2022-post-cut-team-creation-2022-build-team\\CharacterizationData\\sysid_data20220122-151933.json",
+    "NetworkTables Settings": {
+      "serverTeam": "5409"
+    },
+    "mode": "Client",
+    "serverTeam": "5409"
+  }
+}
