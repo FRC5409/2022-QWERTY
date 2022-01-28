@@ -25,7 +25,7 @@ public final class Constants {
     }
 
     public final class ShooterFlywheel{
-        public static final int MAIN_MOTOR_ID = 10;
+        public static final int MAIN_MOTOR_ID = 7;
         public static final int FOLLOWER_MOTOR_ID= 7;
         
         public static final int rpmTolerance = 1;
@@ -35,6 +35,12 @@ public final class Constants {
         public static final double i = 0;
         public static final double d = 0;
         public static final double ff = 0.048;
+    }
+
+    public final class Turret{
+        public static final double TURRET_RADIUS = 0;
+        public static final double GEAR_RADIUS = 0;
+
     }
 
     public final class Falcon500{

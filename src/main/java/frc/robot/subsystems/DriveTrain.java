@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -22,8 +24,12 @@ public class DriveTrain extends SubsystemBase{
     public DriveTrain(){
         mot_left_front = new WPI_TalonSRX(Constants.kDriveTrain.left_front_id);
         mot_left_rear = new WPI_TalonSRX(Constants.kDriveTrain.left_rear_id);
+
         mot_right_front = new WPI_TalonSRX(Constants.kDriveTrain.right_front_id);
         mot_right_rear = new WPI_TalonSRX(Constants.kDriveTrain.right_rear_id);
+
+        mot_left_front.setInverted(true);
+        mot_left_rear.setInverted(true);
 
         mot_left_rear.follow(mot_left_front);
         mot_right_rear.follow(mot_right_front);

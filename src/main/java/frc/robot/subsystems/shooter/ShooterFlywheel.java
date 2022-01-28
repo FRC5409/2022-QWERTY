@@ -40,16 +40,17 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     public ShooterFlywheel() {
         mot_main = new WPI_TalonFX(Constants.ShooterFlywheel.MAIN_MOTOR_ID);
-        mot_follower = new WPI_TalonFX(Constants.ShooterFlywheel.FOLLOWER_MOTOR_ID);
+        //mot_follower = new WPI_TalonFX(Constants.ShooterFlywheel.FOLLOWER_MOTOR_ID);
 
         mot_main.configFactoryDefault();
-        mot_follower.configFactoryDefault();
+        //mot_follower.configFactoryDefault();
 
-        mot_follower.setInverted(true);
+        //mot_follower.setInverted(true);
         mot_main.setNeutralMode(NeutralMode.Coast);
+        mot_main.setInverted(true);
         mot_main.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
-        mot_follower.setNeutralMode(NeutralMode.Coast);
-        mot_follower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
+        //mot_follower.setNeutralMode(NeutralMode.Coast);
+        //mot_follower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
 
         mot_main.configIntegratedSensorAbsoluteRange(AbsoluteSensorRange.Unsigned_0_to_360);
         configPID(Constants.ShooterFlywheel.p, Constants.ShooterFlywheel.i, Constants.ShooterFlywheel.d,
@@ -58,7 +59,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         enabled = false;
         rpmTarget = 0;
 
-        mot_follower.follow(mot_main);
+        //mot_follower.follow(mot_main);
 
         //shuffleboard data initialization
         //this data is updated in periodic of this subsystem
