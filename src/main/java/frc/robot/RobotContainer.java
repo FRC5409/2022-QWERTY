@@ -6,12 +6,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.EnableShooter;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.TankDriveCommand;
 import frc.robot.commands.TuningTesting;
+import frc.robot.Constants.ShooterFlywheel;
+import frc.robot.commands.AadilDriveCommand;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.ShooterFlywheel;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -26,6 +28,9 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterFlywheel m_flywheel;
   private final Indexer m_indexer = new Indexer();
+  private final DriveTrain sys_DriveTrain;
+  private final TankDriveCommand cmd_TankDriveCommand;
+  private final AadilDriveCommand cmd_AadilDriveCommand;
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final TuningTesting m_TuningTesting = new TuningTesting(m_indexer);
@@ -54,6 +59,12 @@ public class RobotContainer {
     but_main_Back = new JoystickButton(joystick_main, XboxController.Button.kBack.value);
     but_main_Start = new JoystickButton(joystick_main, XboxController.Button.kStart.value);
 
+    sys_DriveTrain = new DriveTrain();
+    cmd_TankDriveCommand = new TankDriveCommand(sys_DriveTrain, joystick_main);
+    cmd_AadilDriveCommand = new AadilDriveCommand(sys_DriveTrain, joystick_main);
+
+    sys_DriveTrain.setDefaultCommand(cmd_AadilDriveCommand);
+
     m_flywheel = new ShooterFlywheel();
     // Configure the button bindings
     configureButtonBindings();
@@ -66,7 +77,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    but_main_A.whenPressed(new EnableShooter(m_flywheel));
+    //but_main_A.whenPressed(new EnableShooter(m_flywheel));
   }
 
   /**
