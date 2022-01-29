@@ -12,6 +12,10 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.commands.TuningTesting;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.ShooterFlywheel;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -28,6 +32,7 @@ public class RobotContainer {
   //private final DriveTrain m_driveTrain;
 
 
+  private final Indexer m_indexer;
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -40,6 +45,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
     joystick_main = new XboxController(0);
 
     // Init button binds
@@ -54,12 +60,14 @@ public class RobotContainer {
     but_main_Back = new JoystickButton(joystick_main, XboxController.Button.kBack.value);
     but_main_Start = new JoystickButton(joystick_main, XboxController.Button.kStart.value);
 
+    m_indexer = new Indexer();
     m_flywheel = new ShooterFlywheel();
     //m_driveTrain = new DriveTrain();
 
     //defaultDrive = new DefaultDrive(m_driveTrain, joystick_main);
     //m_driveTrain.setDefaultCommand(defaultDrive);
 
+    // m_indexer.setDefaultCommand(m_TuningTesting);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -71,7 +79,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    but_main_A.whenPressed(new EnableShooter(m_flywheel));
+    // but_main_A.whenPressed(new EnableShooter(m_flywheel));
+    but_main_B.whenPressed(new TuningTesting(m_indexer));
   }
 
   /**
