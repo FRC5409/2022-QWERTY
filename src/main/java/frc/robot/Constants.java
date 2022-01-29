@@ -14,8 +14,6 @@ package frc.robot;
  */
 public final class Constants {
 
-
-
     public final class kDriveTrain{
         public static final int left_front_id = 51;
         public static final int left_rear_id = 52;
@@ -47,10 +45,15 @@ public final class Constants {
         public static final double unitsPerRotation = 2048;
     }
 
-
     public final class kTurret{
         public static final int MAIN_MOTOR_ID = 0;
 
+    }
+
+    public final class kIndexer{
+        public static final int currentLimit = 20; 
+        public static final int kIndexBeltMotor = 6;
+        public static final int kIndexShooterMotor = 7;
     }
 
 }
