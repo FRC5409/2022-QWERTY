@@ -1,13 +1,12 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorSensorV3;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
-import com.revrobotics.ColorSensorV3;
 
 public class Colour extends SubsystemBase{
     private final I2C.Port i2cPort = I2C.Port.kOnboard;

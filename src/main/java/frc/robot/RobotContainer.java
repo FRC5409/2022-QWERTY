@@ -8,10 +8,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.EnableShooter;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.commands.TuningTesting;
 import frc.robot.subsystems.Colour;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.ShooterFlywheel;
+import frc.robot.subsystems.shooter.ShooterFlywheel;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -26,6 +28,8 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterFlywheel m_flywheel;
   private final Colour m_colour;
+  //private final DriveTrain m_driveTrain;
+
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -33,7 +37,7 @@ public class RobotContainer {
   private final XboxController joystick_main; // = new XboxController(0);
   private final JoystickButton but_main_A, but_main_B, but_main_X, but_main_Y, but_main_LBumper, but_main_RBumper,
       but_main_LAnalog, but_main_RAnalog, but_main_Back, but_main_Start;
-  
+  //private final DefaultDrive defaultDrive;
       
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -55,7 +59,11 @@ public class RobotContainer {
 
     m_colour = new Colour();
     m_flywheel = new ShooterFlywheel();
-    // m_indexer.setDefaultCommand(m_TuningTesting);
+    //m_driveTrain = new DriveTrain();
+
+    //defaultDrive = new DefaultDrive(m_driveTrain, joystick_main);
+    //m_driveTrain.setDefaultCommand(defaultDrive);
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -67,8 +75,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // but_main_A.whenPressed(new EnableShooter(m_flywheel));
-    but_main_B.whenPressed(new TuningTesting(m_colour));
+    but_main_A.whenPressed(new EnableShooter(m_flywheel));
+    but_main_B.whenPressed(new TuningTesting(m_indexer));
   }
 
   /**
