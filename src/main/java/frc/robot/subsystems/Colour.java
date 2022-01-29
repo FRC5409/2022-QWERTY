@@ -10,9 +10,10 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 public class Colour extends SubsystemBase{
-    private I2C.Port i2cPort = I2C.Port.kOnboard;
-    private ColorSensorV3 m_colourSensor = new ColorSensorV3(i2cPort);
+    private final I2C.Port i2cPort = I2C.Port.kOnboard;
+    private final ColorSensorV3 m_colourSensor = new ColorSensorV3(i2cPort);
     private ColorMatch m_colorMatcher = new ColorMatch();
+    private double counter = 0.0;
 
     public void colourCalibration() {
 
@@ -28,7 +29,7 @@ public class Colour extends SubsystemBase{
         // SmartDashboard.putNumber("Confidence", match.confidence);
         SmartDashboard.putNumber("Proximity", proximity);
         SmartDashboard.putNumber("IR", IR);
-
+        SmartDashboard.putNumber("counter", counter++);
     }
 
     public void initialColourCalibration(){
