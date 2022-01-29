@@ -23,16 +23,21 @@ public final class Constants {
     }
 
     public final class ShooterFlywheel{
-        public static final int MAIN_MOTOR_ID = 7;
-        public static final int FOLLOWER_MOTOR_ID= 10;
+        public static final int UPPER_MOTOR_ID = 10;
+        public static final int LOWER_MOTOR_ID= 7;
         
         public static final int rpmTolerance = 1;
 
 
-        public static final double p = 0.07;
-        public static final double i = 0;
-        public static final double d = 0;
-        public static final double ff = 0.048;
+        public static final double UPPER_P = 0.07;
+        public static final double UPPER_I = 0;
+        public static final double UPPER_D = 0;
+        public static final double UPPER_FF = 0.048;
+
+        public static final double LOWER_P = 0.07;
+        public static final double LOWER_I = 0;
+        public static final double LOWER_D = 0;
+        public static final double LOWER_FF = 0.048;
     }
 
     public final class Turret{
