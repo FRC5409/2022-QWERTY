@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
@@ -24,11 +25,11 @@ public class Colour extends SubsystemBase{
 
     public void colourCalibration() {
 
-        final Color detectedColour = m_colourSensor.getColor();
+        Color detectedColour = m_colourSensor.getColor();
         // ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColour);
 
-        final double IR = m_colourSensor.getIR();
-        final int proximity = m_colourSensor.getProximity();
+        double IR = m_colourSensor.getIR();
+        int proximity = m_colourSensor.getProximity();
 
         SmartDashboard.putNumber("Blue value", detectedColour.blue);
         SmartDashboard.putNumber("Red value", detectedColour.red);
@@ -40,11 +41,11 @@ public class Colour extends SubsystemBase{
 
     public void initialColourCalibration(){
 
-        final Color detectedColour = m_colourSensor.getColor();
+        Color detectedColour = m_colourSensor.getColor();
         // ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColour);
     
-        final double IR = m_colourSensor.getIR(); 
-        final int proximity = m_colourSensor.getProximity();
+        double IR = m_colourSensor.getIR(); 
+        int proximity = m_colourSensor.getProximity();
     
         SmartDashboard.putNumber("Instataneous Red", detectedColour.red);
         SmartDashboard.putNumber("Instataneous Green", detectedColour.green);

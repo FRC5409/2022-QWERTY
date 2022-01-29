@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.EnableShooter;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.shooter.Limelight;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.commands.TuningTesting;
 import frc.robot.subsystems.Colour;
@@ -29,7 +30,7 @@ public class RobotContainer {
   private final ShooterFlywheel m_flywheel;
   private final Colour m_colour;
   //private final DriveTrain m_driveTrain;
-
+  private final Limelight limelight;
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -61,6 +62,7 @@ public class RobotContainer {
     m_flywheel = new ShooterFlywheel();
     //m_driveTrain = new DriveTrain();
 
+    limelight = new Limelight();
     //defaultDrive = new DefaultDrive(m_driveTrain, joystick_main);
     //m_driveTrain.setDefaultCommand(defaultDrive);
 
@@ -76,7 +78,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     but_main_A.whenPressed(new EnableShooter(m_flywheel));
-    but_main_B.whenPressed(new TuningTesting(m_indexer));
+    but_main_B.whenPressed(new TuningTesting(m_colour));
   }
 
   /**

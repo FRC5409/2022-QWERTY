@@ -28,9 +28,10 @@ import frc.robot.Constants;
  */
 public final class ShooterFlywheel extends SubsystemBase {
 
-    WPI_TalonFX mot_main;
-    WPI_TalonFX mot_follower;
-    double rpmTarget;
+    WPI_TalonFX mot_upper;
+    WPI_TalonFX mot_lower;
+    double upperTarget;
+    double lowerTarget;
     boolean enabled;
 
     ShuffleboardTab tab;
@@ -40,53 +41,63 @@ public final class ShooterFlywheel extends SubsystemBase {
      * Constructs a flywheel subsystem.
      */
     public ShooterFlywheel() {
-        mot_main = new WPI_TalonFX(Constants.ShooterFlywheel.MAIN_MOTOR_ID);
-        mot_follower = new WPI_TalonFX(Constants.ShooterFlywheel.FOLLOWER_MOTOR_ID);
+        mot_upper = new WPI_TalonFX(Constants.ShooterFlywheel.UPPER_MOTOR_ID);
+        mot_lower = new WPI_TalonFX(Constants.ShooterFlywheel.LOWER_MOTOR_ID);
 
-        mot_main.configFactoryDefault();
-        mot_follower.configFactoryDefault();
+        mot_upper.configFactoryDefault();
+        mot_lower.configFactoryDefault();
 
-        mot_main.setNeutralMode(NeutralMode.Coast);
-        mot_main.setInverted(true);
-        mot_main.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
-        mot_main.configIntegratedSensorAbsoluteRange(AbsoluteSensorRange.Unsigned_0_to_360);
+        mot_upper.setNeutralMode(NeutralMode.Coast);
+        mot_upper.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
+        configPID(mot_upper, Constants.ShooterFlywheel.UPPER_P, Constants.ShooterFlywheel.UPPER_I,
+                Constants.ShooterFlywheel.UPPER_D, Constants.ShooterFlywheel.UPPER_FF);
 
-        mot_follower.setNeutralMode(NeutralMode.Coast);
-        mot_follower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
-        mot_follower.setInverted(InvertType.OpposeMaster);
+        mot_lower.setNeutralMode(NeutralMode.Coast);
+        mot_lower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
+        mot_lower.setInverted(true);
+        configPID(mot_lower, Constants.ShooterFlywheel.LOWER_P, Constants.ShooterFlywheel.LOWER_I,
+                Constants.ShooterFlywheel.LOWER_D, Constants.ShooterFlywheel.LOWER_FF);
 
-        configPID(Constants.ShooterFlywheel.p, Constants.ShooterFlywheel.i, Constants.ShooterFlywheel.d,
-                Constants.ShooterFlywheel.ff);
-        
         enabled = false;
-        rpmTarget = 0;
+        upperTarget = 0;
+        lowerTarget = 0;
 
-        mot_follower.follow(mot_main);
-
-        //shuffleboard data initialization
-        //this data is updated in periodic of this subsystem
+        // shuffleboard data initialization
+        // this data is updated in periodic of this subsystem
 
         shuffleBoardFields = new HashMap<String, NetworkTableEntry>();
 
         tab = Shuffleboard.getTab("Flywheel");
         ShuffleboardLayout flywheelLayout = tab.getLayout("flywheelLayout", BuiltInLayouts.kList);
-        shuffleBoardFields.put("targetRPM",
-                flywheelLayout.add("RPM target", rpmTarget).withWidget(BuiltInWidgets.kNumberSlider)
+        shuffleBoardFields.put("upperTarget",
+                flywheelLayout.add("Upper target", upperTarget).withWidget(BuiltInWidgets.kNumberSlider)
                         .withProperties(Map.of("min", 0, "max", 6000, "blockincrement", 500)).getEntry());
-        shuffleBoardFields.put("currentRPM", flywheelLayout.add("Current RPM", getRPM()).getEntry());
+        shuffleBoardFields.put("lowerTarget",
+                flywheelLayout.add("Lower target", lowerTarget).withWidget(BuiltInWidgets.kNumberSlider)
+                        .withProperties(Map.of("min", 0, "max", 6000, "blockincrement", 500)).getEntry());
+        shuffleBoardFields.put("rpmUpper", flywheelLayout.add("Current Upper RPM", getUpperRPM()).getEntry());
+        shuffleBoardFields.put("rpmLower", flywheelLayout.add("Current Lower RPM", getLowerRPM()).getEntry());
         shuffleBoardFields.put("subsystemEnabled", flywheelLayout.add("Subsystem Enabled: ", enabled).getEntry());
-        shuffleBoardFields.put("fluctuationGraph",
-                flywheelLayout.add("RPM Fluctuation Graph", getRPM() - getRPMTarget()).withWidget(BuiltInWidgets.kGraph)
-                        .withProperties(Map.of("visibletime", 10)).getEntry());
-        
 
         ShuffleboardLayout pidTuningLayout = tab.getLayout("PID Tuning Controls", BuiltInLayouts.kList);
-        shuffleBoardFields.put("p",pidTuningLayout.add("P Const: ", Constants.ShooterFlywheel.p).getEntry());
-        shuffleBoardFields.put("i", pidTuningLayout.add("I const: ", Constants.ShooterFlywheel.i).getEntry());
-        shuffleBoardFields.put("d", pidTuningLayout.add("D Const: ", Constants.ShooterFlywheel.d).getEntry());
-        shuffleBoardFields.put("f", pidTuningLayout.add("F const: ", Constants.ShooterFlywheel.ff).getEntry());
-        shuffleBoardFields.put("change", pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
-        shuffleBoardFields.put("currentGraph", pidTuningLayout.add("Current vs Time", 0.0).withWidget(BuiltInWidgets.kGraph).withProperties(Map.of("visibletime", 10)).getEntry());
+        shuffleBoardFields.put("lp",
+                pidTuningLayout.add("Lower P Const: ", Constants.ShooterFlywheel.LOWER_P).getEntry());
+        shuffleBoardFields.put("li",
+                pidTuningLayout.add("Lower I const: ", Constants.ShooterFlywheel.LOWER_I).getEntry());
+        shuffleBoardFields.put("ld",
+                pidTuningLayout.add("Lower D Const: ", Constants.ShooterFlywheel.LOWER_D).getEntry());
+        shuffleBoardFields.put("lf",
+                pidTuningLayout.add("Lower F const: ", Constants.ShooterFlywheel.LOWER_FF).getEntry());
+        shuffleBoardFields.put("up",
+                pidTuningLayout.add("Upper P Const: ", Constants.ShooterFlywheel.UPPER_P).getEntry());
+        shuffleBoardFields.put("ui",
+                pidTuningLayout.add("Upper I const: ", Constants.ShooterFlywheel.UPPER_I).getEntry());
+        shuffleBoardFields.put("ud",
+                pidTuningLayout.add("Upper D Const: ", Constants.ShooterFlywheel.UPPER_D).getEntry());
+        shuffleBoardFields.put("uf",
+                pidTuningLayout.add("Upper F const: ", Constants.ShooterFlywheel.UPPER_FF).getEntry());
+        shuffleBoardFields.put("change",
+                pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
     }
 
     /**
@@ -94,19 +105,18 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        setRPMTarget(shuffleBoardFields.get("targetRPM").getDouble(50));
-        shuffleBoardFields.get("currentRPM").setDouble(getRPM());
+        setUpperRPMTarget(shuffleBoardFields.get("upperTarget").getDouble(50));
+        setLowerRPMTarget(shuffleBoardFields.get("lowerTarget").getDouble(50));
+        shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
+        shuffleBoardFields.get("rpmUpper").setDouble(getUpperRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
-        shuffleBoardFields.get("fluctuationGraph").setDouble(getRPM() - getRPMTarget());
-        shuffleBoardFields.get("currentGraph").setDouble(mot_main.getStatorCurrent());
-        if(shuffleBoardFields.get("change").getBoolean(false)){
+        if (shuffleBoardFields.get("change").getBoolean(false)) {
             disable();
-            mot_main.config_kP(0, shuffleBoardFields.get("p").getDouble(0));
-            mot_main.config_kI(0, shuffleBoardFields.get("i").getDouble(0));
-            mot_main.config_kD(0, shuffleBoardFields.get("d").getDouble(0));
-            mot_main.config_kF(0, shuffleBoardFields.get("f").getDouble(0));
+            configPID(mot_upper, shuffleBoardFields.get("up").getDouble(0), shuffleBoardFields.get("ui").getDouble(0),
+                    shuffleBoardFields.get("ud").getDouble(0), shuffleBoardFields.get("uf").getDouble(0));
+            configPID(mot_lower, shuffleBoardFields.get("lp").getDouble(0), shuffleBoardFields.get("li").getDouble(0),
+                    shuffleBoardFields.get("ld").getDouble(0), shuffleBoardFields.get("lf").getDouble(0));
             System.out.println("Pid configured");
-            enable();
             shuffleBoardFields.get("change").setBoolean(false);
         }
     }
@@ -116,19 +126,18 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     @Override
     public void simulationPeriodic() {
-        setRPMTarget(shuffleBoardFields.get("targetRPM").getDouble(50));
-        shuffleBoardFields.get("currentRPM").setDouble(getRPM());
+        setUpperRPMTarget(shuffleBoardFields.get("upperTarget").getDouble(50));
+        setLowerRPMTarget(shuffleBoardFields.get("lowerTarget").getDouble(50));
+        shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
+        shuffleBoardFields.get("rpmUpper").setDouble(getUpperRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
-        shuffleBoardFields.get("fluctuationGraph").setDouble(getRPM() - getRPMTarget());
-        shuffleBoardFields.get("currentGraph").setDouble(mot_main.getStatorCurrent());
-        if(shuffleBoardFields.get("change").getBoolean(false)){
+        if (shuffleBoardFields.get("change").getBoolean(false)) {
             disable();
-            mot_main.config_kP(0, shuffleBoardFields.get("p").getDouble(0));
-            mot_main.config_kI(0, shuffleBoardFields.get("i").getDouble(0));
-            mot_main.config_kD(0, shuffleBoardFields.get("d").getDouble(0));
-            mot_main.config_kF(0, shuffleBoardFields.get("f").getDouble(0));
+            configPID(mot_upper, shuffleBoardFields.get("up").getDouble(0), shuffleBoardFields.get("ui").getDouble(0),
+                    shuffleBoardFields.get("ud").getDouble(0), shuffleBoardFields.get("uf").getDouble(0));
+            configPID(mot_lower, shuffleBoardFields.get("lp").getDouble(0), shuffleBoardFields.get("li").getDouble(0),
+                    shuffleBoardFields.get("ld").getDouble(0), shuffleBoardFields.get("lf").getDouble(0));
             System.out.println("Pid configured");
-            enable();
             shuffleBoardFields.get("change").setBoolean(false);
         }
     }
@@ -138,7 +147,8 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     public void enable() {
         enabled = true;
-        setRPMTarget(rpmTarget);
+        setUpperRPMTarget(upperTarget);
+        setLowerRPMTarget(lowerTarget);
     }
 
     /**
@@ -146,8 +156,8 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     public void disable() {
         enabled = false;
-        mot_main.set(0);
-        //mot_main.set(ControlMode.Velocity, 0);
+        mot_upper.set(0);
+        mot_lower.set(0);
     }
 
     /**
@@ -155,27 +165,41 @@ public final class ShooterFlywheel extends SubsystemBase {
      * 
      * @param target Target revolutions per minute.
      */
-    public void setRPMTarget(double target) {
+    public void setLowerRPMTarget(double target) {
         if (enabled) {
-            rpmTarget = target;
+            lowerTarget = target;
             // 600 since its rotation speed is in position change/100ms
-            mot_main.set(ControlMode.Velocity, rpmTarget * Constants.Falcon500.unitsPerRotation / 600.0);
+            mot_lower.set(ControlMode.Velocity, lowerTarget * Constants.Falcon500.unitsPerRotation / 600.0);
         }
     }
 
     /**
-     * Method for configuring the PID of the main motor.
+     * Method that sets the target for the shooter flywheel.
      * 
+     * @param target Target revolutions per minute.
+     */
+    public void setUpperRPMTarget(double target) {
+        if (enabled) {
+            upperTarget = target;
+            // 600 since its rotation speed is in position change/100ms
+            mot_upper.set(ControlMode.Velocity, upperTarget * Constants.Falcon500.unitsPerRotation / 600.0);
+        }
+    }
+
+    /**
+     * Method for configuring the PID of the motor.
+     * 
+     * @param motor Motor to configure.
      * @param p  P constant
      * @param i  I constant
      * @param d  D constant
      * @param ff Feedforward constant
      */
-    public void configPID(double p, double i, double d, double ff) {
-        mot_main.config_kP(0, Constants.ShooterFlywheel.p);
-        mot_main.config_kI(0, Constants.ShooterFlywheel.i);
-        mot_main.config_kD(0, Constants.ShooterFlywheel.d);
-        mot_main.config_kF(0, Constants.ShooterFlywheel.ff);
+    public void configPID(WPI_TalonFX motor, double p, double i, double d, double ff) {
+        motor.config_kP(0, p);
+        motor.config_kI(0, i);
+        motor.config_kD(0, d);
+        motor.config_kF(0, ff);
     }
 
     /**
@@ -183,17 +207,17 @@ public final class ShooterFlywheel extends SubsystemBase {
      * 
      * @return A double representing the RPM of the motor.
      */
-    public double getRPM() {
-        return (mot_main.getSelectedSensorVelocity() * 600.0) / Constants.Falcon500.unitsPerRotation;
+    public double getLowerRPM() {
+        return (mot_lower.getSelectedSensorVelocity() * 600.0) / Constants.Falcon500.unitsPerRotation;
     }
 
     /**
-     * Method for getting the current RPMTarget.
+     * Method for getting the RPM of the main motor.
      * 
-     * @return A double representing the target RPM.
+     * @return A double representing the RPM of the motor.
      */
-    public double getRPMTarget() {
-        return rpmTarget;
+    public double getUpperRPM() {
+        return (mot_upper.getSelectedSensorVelocity() * 600.0) / Constants.Falcon500.unitsPerRotation;
     }
 
     /**
