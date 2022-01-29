@@ -8,25 +8,25 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Colour;
 
 public class TuningTesting extends CommandBase {
 
-  private Indexer sys_indexer;
+  private Colour sys_colour;
   /**
    * Creates a new TuningTesting.
    */
-  public TuningTesting(Indexer subsystem) {
+  public TuningTesting(Colour subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
 
-    sys_indexer = subsystem;
-    addRequirements(sys_indexer);
+    sys_colour = subsystem;
+    addRequirements(sys_colour);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sys_indexer.initialColourCalibration();
+    sys_colour.initialColourCalibration();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
