@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterFlywheel;
+import frc.robot.subsystems.shooter.ShooterFlywheel;
 
 public class EnableShooter extends CommandBase{
 
@@ -19,7 +19,7 @@ public class EnableShooter extends CommandBase{
         } else {
             flywheel.enable();
         }
-        System.out.println("changed");
+        //System.out.println("changed");
     }
     
     @Override
