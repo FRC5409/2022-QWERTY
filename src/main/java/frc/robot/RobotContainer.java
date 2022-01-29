@@ -11,8 +11,8 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.commands.TuningTesting;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Colour;
+import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -27,10 +27,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterFlywheel m_flywheel;
+  private final Colour m_colour;
   //private final DriveTrain m_driveTrain;
 
-
-  private final Colour m_indexer;
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -58,7 +57,7 @@ public class RobotContainer {
     but_main_Back = new JoystickButton(joystick_main, XboxController.Button.kBack.value);
     but_main_Start = new JoystickButton(joystick_main, XboxController.Button.kStart.value);
 
-    m_indexer = new Colour();
+    m_colour = new Colour();
     m_flywheel = new ShooterFlywheel();
     //m_driveTrain = new DriveTrain();
 
