@@ -8,15 +8,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Colour;
 
 public class TuningTesting extends CommandBase {
 
-  private Indexer sys_indexer;
+  private Colour sys_indexer;
   /**
    * Creates a new TuningTesting.
    */
-  public TuningTesting(Indexer subsystem) {
+  public TuningTesting(Colour subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     sys_indexer = subsystem;
