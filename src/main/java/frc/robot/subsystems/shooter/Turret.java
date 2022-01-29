@@ -83,6 +83,7 @@ public class Turret extends SubsystemBase{
      * @param newTarget Angle to turn to in degrees, can be negative for turning left, positive for turning right.
      */
     public void setRotationTarget(double newTarget){
+        //TODO add safetys
         mot_main.setSelectedSensorPosition(0);
 
         target = newTarget;

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -40,26 +41,27 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     public ShooterFlywheel() {
         mot_main = new WPI_TalonFX(Constants.ShooterFlywheel.MAIN_MOTOR_ID);
-        //mot_follower = new WPI_TalonFX(Constants.ShooterFlywheel.FOLLOWER_MOTOR_ID);
+        mot_follower = new WPI_TalonFX(Constants.ShooterFlywheel.FOLLOWER_MOTOR_ID);
 
         mot_main.configFactoryDefault();
-        //mot_follower.configFactoryDefault();
+        mot_follower.configFactoryDefault();
 
-        //mot_follower.setInverted(true);
         mot_main.setNeutralMode(NeutralMode.Coast);
         mot_main.setInverted(true);
         mot_main.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
-        //mot_follower.setNeutralMode(NeutralMode.Coast);
-        //mot_follower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
-
         mot_main.configIntegratedSensorAbsoluteRange(AbsoluteSensorRange.Unsigned_0_to_360);
+
+        mot_follower.setNeutralMode(NeutralMode.Coast);
+        mot_follower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
+        mot_follower.setInverted(InvertType.OpposeMaster);
+
         configPID(Constants.ShooterFlywheel.p, Constants.ShooterFlywheel.i, Constants.ShooterFlywheel.d,
                 Constants.ShooterFlywheel.ff);
         
         enabled = false;
         rpmTarget = 0;
 
-        //mot_follower.follow(mot_main);
+        mot_follower.follow(mot_main);
 
         //shuffleboard data initialization
         //this data is updated in periodic of this subsystem

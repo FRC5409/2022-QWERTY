@@ -19,7 +19,7 @@ public class EnableShooter extends CommandBase{
         } else {
             flywheel.enable();
         }
-        System.out.println("changed");
+        //System.out.println("changed");
     }
     
     @Override

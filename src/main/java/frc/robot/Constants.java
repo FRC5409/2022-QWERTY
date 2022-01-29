@@ -26,7 +26,7 @@ public final class Constants {
 
     public final class ShooterFlywheel{
         public static final int MAIN_MOTOR_ID = 7;
-        public static final int FOLLOWER_MOTOR_ID= 7;
+        public static final int FOLLOWER_MOTOR_ID= 10;
         
         public static final int rpmTolerance = 1;
 
