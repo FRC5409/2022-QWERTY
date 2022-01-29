@@ -25,10 +25,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterFlywheel m_flywheel;
-  private final Indexer m_indexer = new Indexer();
+  private final Indexer m_indexer;
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final TuningTesting m_TuningTesting = new TuningTesting(m_indexer);
 
   // Define main joystick
   private final XboxController joystick_main; // = new XboxController(0);
@@ -54,7 +53,9 @@ public class RobotContainer {
     but_main_Back = new JoystickButton(joystick_main, XboxController.Button.kBack.value);
     but_main_Start = new JoystickButton(joystick_main, XboxController.Button.kStart.value);
 
+    m_indexer = new Indexer();
     m_flywheel = new ShooterFlywheel();
+    // m_indexer.setDefaultCommand(m_TuningTesting);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -66,7 +67,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    but_main_A.whenPressed(new EnableShooter(m_flywheel));
+    // but_main_A.whenPressed(new EnableShooter(m_flywheel));
+    but_main_B.whenPressed(new TuningTesting(m_indexer));
   }
 
   /**
