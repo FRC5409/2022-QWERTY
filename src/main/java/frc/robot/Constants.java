@@ -53,4 +53,8 @@ public final class Constants {
 
     }
 
+    public final class kColour{
+        public static final int proximityThreshold = 1000;
+    }
+
 }
