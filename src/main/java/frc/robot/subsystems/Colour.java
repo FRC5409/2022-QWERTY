@@ -57,16 +57,19 @@ public class Colour extends SubsystemBase{
 
     public void colourMatch() {
 
-        final Color detectedColor = m_colourSensor.getColor();
+        Color detectedColor = m_colourSensor.getColor();
         ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
-    
+        String colourValue;
+
         if (match.color == kBlueTarget) {
-            SmartDashboard.putString("Detected colour", "Blue");
+            colourValue = "Blue";
         } else if (match.color == kRedTarget) {
-            SmartDashboard.putString("Detected colour", "Red");
+            colourValue = "Red";
         } else {
-            SmartDashboard.putString("Detected colour", "Unknown");
+            colourValue = "Unknown";
         }
+
+        SmartDashboard.putString("Detected colour", colourValue)
       }
 
     @Override
