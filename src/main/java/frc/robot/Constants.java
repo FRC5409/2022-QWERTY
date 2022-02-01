@@ -59,6 +59,10 @@ public final class Constants {
 
     }
 
+    public final class kColour{
+        public static final int proximityThreshold = 1000;
+    }
+  
     public final class kIndexer{
         public static final int currentLimit = 20; 
         public static final int kIndexBeltMotor = 31;
