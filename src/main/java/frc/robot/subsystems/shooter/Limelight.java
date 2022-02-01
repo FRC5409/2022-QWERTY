@@ -11,8 +11,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
-public class Limelight extends SubsystemBase{
+public class Limelight extends SubsystemBase {
 
     double horizontalOffset;
     double verticalOffset;
@@ -24,15 +25,13 @@ public class Limelight extends SubsystemBase{
 
     NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
-
-    public Limelight(){
+    public Limelight() {
         data = new HashMap<String, NetworkTableEntry>();
-        shuffleboardFields = new HashMap<String,NetworkTableEntry>();
+        shuffleboardFields = new HashMap<String, NetworkTableEntry>();
         data.put("horizontalOffset", limelightTable.getEntry("tx"));
         data.put("verticalOffset", limelightTable.getEntry("ty"));
         data.put("targetArea", limelightTable.getEntry("ta"));
         data.put("targets", limelightTable.getEntry("tv"));
-
 
         ShuffleboardLayout layout = Shuffleboard.getTab("Limelight").getLayout("Limelight Data", BuiltInLayouts.kList);
         shuffleboardFields.put("x", layout.add("Horizontal Offset", 0).getEntry());
@@ -49,23 +48,34 @@ public class Limelight extends SubsystemBase{
         shuffleboardFields.get("t").setDouble(getTargets());
     }
 
-    public double getHorizontalOffset(){
+    public double getHorizontalOffset() {
         return limelightTable.getEntry("tx").getDouble(0);
-        //return data.get("horizontalOffset").getDouble(0);
+        // return data.get("horizontalOffset").getDouble(0);
     }
 
-    public double getVerticalOffset(){
+    public double getVerticalOffset() {
         return limelightTable.getEntry("ty").getDouble(0);
-        //return data.get("verticalOffset").getDouble(0);
+        // return data.get("verticalOffset").getDouble(0);
     }
 
-    public double getTargetArea(){
+    public double getTargetArea() {
+        System.out.println(limelightTable.getEntry("ta").getDouble(0));
         return limelightTable.getEntry("ta").getDouble(0);
-        //return data.get("targetArea").getDouble(0);
+        // return data.get("targetArea").getDouble(0);
     }
 
-    public double getTargets(){
+    public double getTargets() {
         return data.get("targets").getDouble(0);
     }
-    
+
+    public double calculateDistanceToUpper() {
+        return (2.64 - Constants.Turret.ROBOT_HEIGHT)
+                / Math.tan(Math.toRadians(getVerticalOffset() + Constants.Turret.FIXED_ANGLE));
+    }
+
+    public double calculateDistanceToLower(){
+        return (1.04 - Constants.Turret.ROBOT_HEIGHT)
+                / Math.tan(Math.toRadians(getVerticalOffset() + Constants.Turret.FIXED_ANGLE)); 
+    }
+
 }

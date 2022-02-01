@@ -44,6 +44,10 @@ public final class Constants {
         public static final double TURRET_RADIUS = 0;
         public static final double GEAR_RADIUS = 0;
 
+        //Height in meters
+        public static final double ROBOT_HEIGHT = 4;
+        public static final double FIXED_ANGLE = 45;
+
     }
 
     public final class Falcon500{
