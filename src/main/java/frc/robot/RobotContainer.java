@@ -8,10 +8,15 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.EnableShooter;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.TestIndexBelt;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IndexerProto;
+import frc.robot.subsystems.shooter.Limelight;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.commands.TuningTesting;
 import frc.robot.subsystems.Colour;
+import frc.robot.commands.TestIndexProto;
+import frc.robot.commands.TestIndexShoot;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,6 +35,13 @@ public class RobotContainer {
   private final Colour m_colour;
   //private final DriveTrain m_driveTrain;
 
+
+  private final IndexerProto m_indexerProto; 
+  private final TestIndexBelt m_testIndexBelt;
+  private final TestIndexShoot m_testIndexShoot;
+  private final TestIndexProto m_testIndexProto;
+
+  //private final Limelight limelight;
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -59,8 +71,13 @@ public class RobotContainer {
 
     m_colour = new Colour();
     m_flywheel = new ShooterFlywheel();
+    m_indexerProto = new IndexerProto();
+    m_testIndexBelt = new TestIndexBelt(m_indexerProto);
+    m_testIndexProto = new TestIndexProto(m_indexerProto);
+    m_testIndexShoot = new TestIndexShoot(m_indexerProto);
     //m_driveTrain = new DriveTrain();
 
+    //limelight = new Limelight();
     //defaultDrive = new DefaultDrive(m_driveTrain, joystick_main);
     //m_driveTrain.setDefaultCommand(defaultDrive);
 
@@ -76,7 +93,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     but_main_A.whenPressed(new EnableShooter(m_flywheel));
-    but_main_B.whenPressed(new TuningTesting(m_indexer));
+
+    but_main_X.whenPressed(new TestIndexBelt(m_indexerProto));
+    but_main_Y.whenPressed(new TestIndexShoot(m_indexerProto));
+    but_main_RBumper.whenPressed(new TestIndexProto(m_indexerProto));
+    but_main_B.whenPressed(new TuningTesting(m_colour));
   }
 
   /**

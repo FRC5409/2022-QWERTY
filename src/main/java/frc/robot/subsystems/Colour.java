@@ -29,8 +29,8 @@ public class Colour extends SubsystemBase{
 
         final Color detectedColour = m_colourSensor.getColor();
 
-        final double IR = m_colourSensor.getIR();
-        final int proximity = m_colourSensor.getProximity();
+        double IR = m_colourSensor.getIR();
+        int proximity = m_colourSensor.getProximity();
 
         SmartDashboard.putNumber("Blue value", detectedColour.blue);
         SmartDashboard.putNumber("Red value", detectedColour.red);
@@ -43,8 +43,8 @@ public class Colour extends SubsystemBase{
 
         final Color detectedColour = m_colourSensor.getColor();
     
-        final double IR = m_colourSensor.getIR(); 
-        final int proximity = m_colourSensor.getProximity();
+        double IR = m_colourSensor.getIR(); 
+        int proximity = m_colourSensor.getProximity();
     
         SmartDashboard.putNumber("Instataneous Red", detectedColour.red);
         SmartDashboard.putNumber("Instataneous Green", detectedColour.green);
