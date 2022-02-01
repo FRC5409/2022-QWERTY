@@ -36,7 +36,7 @@ public class RobotContainer {
   //private final DriveTrain m_driveTrain;
 
 
-  private final Colour m_indexer;
+
   private final IndexerProto m_indexerProto; 
   private final TestIndexBelt m_testIndexBelt;
   private final TestIndexShoot m_testIndexShoot;

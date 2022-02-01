@@ -53,7 +53,7 @@ public class IndexerProto extends SubsystemBase{
  
      shuffleBoardFields.put("motor speed shooter",
          mLayout.add("motor speed shooter", speedShoot).withWidget(BuiltInWidgets.kNumberSlider)
-         .withProperties(Map.of("min", 0, "max", 100, "block increment", 10)).getEntry());
+         .withProperties(Map.of("min", 0, "max", 1, "block increment", 0.1)).getEntry());
  
      shuffleBoardFields.put("current speed of shoot", mLayout.add("Current shooter speed", getSpeedBelt()).getEntry());
   }
