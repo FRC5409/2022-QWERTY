@@ -60,7 +60,7 @@ public final class Constants {
     }
 
     public final class kColour{
-        public static final int proximityThreshold = 1000;
+        public static final int proximityThreshold = 100;
     }
   
     public final class kIndexer{
