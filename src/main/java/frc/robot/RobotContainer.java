@@ -41,7 +41,7 @@ public class RobotContainer {
   private final TestIndexShoot m_testIndexShoot;
   private final TestIndexProto m_testIndexProto;
 
-  //private final Limelight limelight;
+  private final Limelight limelight;
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -77,7 +77,7 @@ public class RobotContainer {
     m_testIndexShoot = new TestIndexShoot(m_indexerProto);
     //m_driveTrain = new DriveTrain();
 
-    //limelight = new Limelight();
+    limelight = new Limelight();
     //defaultDrive = new DefaultDrive(m_driveTrain, joystick_main);
     //m_driveTrain.setDefaultCommand(defaultDrive);
 
