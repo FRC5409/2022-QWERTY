@@ -1,4 +1,5 @@
 package frc.robot.subsystems;
+
 import java.util.HashMap;
 import java.util.Map;
 import frc.robot.Constants.kIndexer;
@@ -39,6 +40,7 @@ public class IndexerProto extends SubsystemBase{
     indexerShooter_neo = new CANSparkMax(kIndexer.kIndexShooterMotor, MotorType.kBrushless); 
     indexerShooter_neo.setSmartCurrentLimit(20);
     indexerShooter_neo.setIdleMode(IdleMode.kBrake);
+    indexerShooter_neo.setInverted(true);
     indexerShooter_neo.burnFlash();
 
      //shuffleboard values
@@ -88,8 +90,8 @@ public class IndexerProto extends SubsystemBase{
     setSpeedBelt(shuffleBoardFields.get("motor speed belt").getDouble(50));
     shuffleBoardFields.get("current speed of belt").setDouble(getSpeedBelt());
 
-    setSpeedShoot(shuffleBoardFields.get("motor speed shoot").getDouble(50));
-    shuffleBoardFields.get("current speed shoot").setDouble(getSpeedShoot());
+    setSpeedShoot(shuffleBoardFields.get("motor speed shooter").getDouble(50));
+    shuffleBoardFields.get("current speed of shoot").setDouble(getSpeedShoot());
 
   }
 }

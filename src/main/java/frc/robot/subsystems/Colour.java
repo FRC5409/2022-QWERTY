@@ -70,7 +70,7 @@ public class Colour extends SubsystemBase{
             colourValue = "Unknown";
         }
 
-        SmartDashboard.putString("Detected colour", colourValue)
+        SmartDashboard.putString("Detected colour", colourValue);
       }
 
     @Override
