@@ -61,8 +61,8 @@ public final class Constants {
 
     public final class kIndexer{
         public static final int currentLimit = 20; 
-        public static final int kIndexBeltMotor = 6;
-        public static final int kIndexShooterMotor = 7;
+        public static final int kIndexBeltMotor = 31;
+        public static final int kIndexShooterMotor = 30;
     }
 
 }
