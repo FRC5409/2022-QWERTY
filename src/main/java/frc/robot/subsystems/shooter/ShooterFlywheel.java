@@ -105,6 +105,7 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        /*
         setUpperRPMTarget(shuffleBoardFields.get("upperTarget").getDouble(50));
         setLowerRPMTarget(shuffleBoardFields.get("lowerTarget").getDouble(50));
         shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
@@ -119,6 +120,7 @@ public final class ShooterFlywheel extends SubsystemBase {
             System.out.println("Pid configured");
             shuffleBoardFields.get("change").setBoolean(false);
         }
+        */
     }
 
     /**
@@ -126,6 +128,7 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     @Override
     public void simulationPeriodic() {
+        /*
         setUpperRPMTarget(shuffleBoardFields.get("upperTarget").getDouble(50));
         setLowerRPMTarget(shuffleBoardFields.get("lowerTarget").getDouble(50));
         shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
@@ -140,6 +143,7 @@ public final class ShooterFlywheel extends SubsystemBase {
             System.out.println("Pid configured");
             shuffleBoardFields.get("change").setBoolean(false);
         }
+        */
     }
 
     /**

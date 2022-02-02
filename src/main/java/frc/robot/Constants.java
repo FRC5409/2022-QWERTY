@@ -67,6 +67,13 @@ public final class Constants {
         public static final int currentLimit = 20; 
         public static final int kIndexBeltMotor = 31;
         public static final int kIndexShooterMotor = 30;
+
+
+        public static final double UPPER_P = 0.0001;
+        public static final double UPPER_I = 0.0;
+        public static final double UPPER_D = 0.0;
+        public static final double UPPER_F = 0.00017;
+
     }
 
 }
