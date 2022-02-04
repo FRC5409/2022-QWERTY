@@ -2,13 +2,23 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Colour": "Subsystem",
       "/LiveWindow/ExampleSubsystem": "Subsystem",
+      "/LiveWindow/IndexerProto": "Subsystem",
+      "/LiveWindow/Limelight": "Subsystem",
       "/LiveWindow/ShooterFlywheel": "Subsystem",
-      "/LiveWindow/Ungrouped/Scheduler": "Scheduler"
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/Shuffleboard/Design Testing/Spin System": "Command"
     }
   },
   "NetworkTables": {
     "Shuffleboard": {
+      "Design Testing": {
+        "Spin System": {
+          "open": true
+        },
+        "open": true
+      },
       "Flywheel": {
         "flywheelLayout": {
           "open": true

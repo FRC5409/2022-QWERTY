@@ -6,7 +6,6 @@ import java.util.Map;
 import frc.robot.Constants;
 import frc.robot.Constants.kIndexer;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -40,10 +39,12 @@ public class IndexerProto extends SubsystemBase {
   double speedBelt = 0;
   double speedShoot = 0;
 
-  private boolean enabled;
+  private boolean indexerEnabled;
+  private boolean preshooterEnabled;
 
   public IndexerProto() {
-    enabled = false;
+    preshooterEnabled = false;
+    indexerEnabled = false;
     // test motor for belt on indexer prototype
     indexerBelt_neo = new CANSparkMax(kIndexer.kIndexBeltMotor, MotorType.kBrushless);
     indexerBelt_neo.setSmartCurrentLimit(20);
@@ -64,7 +65,7 @@ public class IndexerProto extends SubsystemBase {
 
     // shuffleboard values for motors
     shuffleBoardFields = new HashMap<String, NetworkTableEntry>();
-    tab = Shuffleboard.getTab("Motors");
+    tab = Shuffleboard.getTab("IndexerControls");
     ShuffleboardLayout mLayout = tab.getLayout("motor layout", BuiltInLayouts.kList);
     shuffleBoardFields.put("motor speed belt",
         mLayout.add("motor speed belt", speedBelt).withWidget(BuiltInWidgets.kNumberSlider)
@@ -106,14 +107,12 @@ public class IndexerProto extends SubsystemBase {
   }
 
   public void indexShootOn() {
-    enabled = true;
     pidController.setReference(shuffleBoardFields.get("motor speed shooter").getDouble(50),
         CANSparkMax.ControlType.kVelocity);
     // indexerShooter_neo.set(1);
   }
 
   public void indexShootOff() {
-    enabled = false;
     indexerShooter_neo.set(0);
     // pidController.setReference(0, CANSparkMax.ControlType.kVelocity);
   }
@@ -153,10 +152,10 @@ public class IndexerProto extends SubsystemBase {
 
   @Override
   public void periodic() {
-    setSpeedBelt(shuffleBoardFields.get("motor speed belt").getDouble(50));
+    //setSpeedBelt(shuffleBoardFields.get("motor speed belt").getDouble(50));
     shuffleBoardFields.get("current speed of belt").setDouble(getSpeedBelt());
 
-    setSpeedShoot(shuffleBoardFields.get("motor speed shooter").getDouble(50));
+    //setSpeedShoot(shuffleBoardFields.get("motor speed shooter").getDouble(50));
     shuffleBoardFields.get("current speed of shoot").setDouble(getSpeedShoot());
 
     if (shuffleBoardFields.get("change").getBoolean(false)) {
@@ -171,7 +170,75 @@ public class IndexerProto extends SubsystemBase {
 
   }
 
-  public boolean isEnabled() {
-    return enabled;
+  public boolean isPreshooterEnabled() {
+    return preshooterEnabled;
+  }
+
+  public boolean isIndexerEnabled(){
+    return indexerEnabled;
+  }
+
+  public void stopPreshooter(){
+    //indexerShooter_neo.stopMotor();
+    indexerShooter_neo.disable();
+  }
+
+  /**
+   * Method for spinning the pre shooter to an RPM.
+   * @param target Target RPM.
+   */
+  public void spinPreshooter(double target){
+    speedShoot = target;
+    if(preshooterEnabled){
+      if(speedShoot == 0){
+        stopPreshooter();
+      } else {
+        pidController.setReference(speedShoot, CANSparkMax.ControlType.kVelocity);
+      }
+    }
+  }
+ 
+  /**
+   * Method for psinning the lower part of the indexer. 
+   * @param target Setpoint speed for the lower indexer, in range [-1.0, 1.0].
+   */
+  public void spinIndexer(double target){
+    speedBelt = target;
+    if(indexerEnabled){
+      if(speedBelt == 0){
+        stopIndexer();
+      } else {
+        indexerBelt_neo.set(speedBelt);
+      }
+    }
+  }
+
+  public void stopIndexer(){
+    //indexerBelt_neo.stopMotor();
+    indexerBelt_neo.disable();
+  }
+
+  public void disablePreshooter() {
+    preshooterEnabled = false;
+    stopPreshooter();
+  }
+
+  public void disableIndexer(){
+    indexerEnabled = false;
+    stopIndexer();
+  }
+
+  public void enablePreshooter() {
+    preshooterEnabled = true;
+    spinPreshooter(speedShoot);
+  }
+
+  public void enableIndexer(){
+    indexerEnabled = true;
+    spinIndexer(speedBelt);
+  }
+
+  public boolean preshooterReachedTarget(){
+    return Math.abs(speedShoot - getSpeedShoot()) <= Constants.kIndexer.PRESHOOTER_TOLERANCE;
   }
 }

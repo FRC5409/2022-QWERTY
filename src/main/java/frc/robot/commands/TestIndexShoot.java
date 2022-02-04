@@ -18,11 +18,6 @@ public class TestIndexShoot extends CommandBase{
 
     @Override
     public void execute(){
-        if(sys_indexer.isEnabled()){
-            sys_indexer.indexShootOff();
-        } else {
-            sys_indexer.indexShootOn();
-        }
         //sys_indexer.indexShootOn();
     }
 

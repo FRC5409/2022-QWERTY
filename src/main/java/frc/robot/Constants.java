@@ -26,7 +26,9 @@ public final class Constants {
         public static final int UPPER_MOTOR_ID = 10;
         public static final int LOWER_MOTOR_ID= 7;
         
-        public static final int rpmTolerance = 1;
+
+        //in RPM
+        public static final int SHOOTER_TOLERANCE = 50;
 
 
         public static final double UPPER_P = 0.07;
@@ -74,6 +76,8 @@ public final class Constants {
         public static final double UPPER_D = 0.0;
         public static final double UPPER_F = 0.00017;
 
+        //in RPM
+        public static final double PRESHOOTER_TOLERANCE = 50;    
     }
 
 }
