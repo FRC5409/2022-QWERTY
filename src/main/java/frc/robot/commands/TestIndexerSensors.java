@@ -23,8 +23,7 @@ public class TestIndexerSensors extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
@@ -44,10 +43,10 @@ public class TestIndexerSensors extends CommandBase {
         // }
 
         if(m_colourSensor_etr == 'B' || m_colourSensor_etr == 'R'){
-            //move indexer motor
+            sys_indexerProto.moveIndexerBelt(1);
             countBalls = 1;
         } else if(TOF_Ent && !TOF_Exit){
-            //stop indexer motor
+            sys_indexerProto.moveIndexerBelt(0);
             countBalls = 2; 
         }
 
@@ -60,11 +59,12 @@ public class TestIndexerSensors extends CommandBase {
 
     @Override
     public void end(boolean interuppted) {
+        sys_indexerProto.moveIndexerBelt(0);
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return sys_indexerProto.ballDetectionExit() && sys_indexerProto.isRangeValid_Ext();
     }
 
 }

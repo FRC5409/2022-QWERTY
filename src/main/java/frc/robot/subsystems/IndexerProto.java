@@ -136,6 +136,10 @@ public class IndexerProto extends SubsystemBase {
   // INDEXER METHODS
   // ------------------------------------------------------------------------------------
 
+  public void moveIndexerBelt(double speed){
+    indexerBelt_neo.set(speed);
+  }
+
   /**
    * set the speed of the indexer belt
    */
@@ -338,6 +342,9 @@ public class IndexerProto extends SubsystemBase {
   public char getEntranceColour() {
     return detectedEntranceColour;
   }
+
+  // TIME OF FLIGHT METHODS
+  // ----------------------------------------------------------------------------
 
   /**
    * returns the range of the TOF
