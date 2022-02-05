@@ -33,14 +33,22 @@ public class TestIndexerSensors extends CommandBase {
         TOF_Exit = sys_indexerProto.ballDetectionExit();
         TOF_Ent = sys_indexerProto.ballDetectionEnter();
 
-        if (m_colourSensor_etr == 'B' || m_colourSensor_etr == 'R' && TOF_Ent == false) {
-            sys_indexerProto.spinIndexer(0.5);
-            countBalls++;
-        } else if (m_colourSensor_etr == 'B' || m_colourSensor_etr == 'R' && TOF_Ent == true) {
-            sys_indexerProto.spinIndexer(0);
-            countBalls++;
-        } else if(TOF_Exit){
-            sys_indexerProto.spinIndexer(0);
+        // if (m_colourSensor_etr == 'B' || m_colourSensor_etr == 'R' && TOF_Ent == false) {
+        //     sys_indexerProto.spinIndexer(0.5);
+        //     countBalls++;
+        // } else if (m_colourSensor_etr == 'B' || m_colourSensor_etr == 'R' && TOF_Ent == true) {
+        //     sys_indexerProto.spinIndexer(0.5);
+        //     countBalls++;
+        // } else if(TOF_Exit){
+        //     sys_indexerProto.spinIndexer(0);
+        // }
+
+        if(m_colourSensor_etr == 'B' || m_colourSensor_etr == 'R'){
+            //move indexer motor
+            countBalls = 1;
+        } else if(TOF_Ent && !TOF_Exit){
+            //stop indexer motor
+            countBalls = 2; 
         }
 
         if (m_colourSensor_etr != 'B' || m_colourSensor_etr == 'R' && TOF_Exit == false && TOF_Ent == false)
