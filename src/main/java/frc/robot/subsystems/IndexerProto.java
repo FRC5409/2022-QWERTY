@@ -6,7 +6,6 @@ import java.util.Map;
 import frc.robot.Constants;
 import frc.robot.Constants.kIndexer;
 
-import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
@@ -53,6 +52,7 @@ public class IndexerProto extends SubsystemBase {
 
   // time of flights
   protected TimeOfFlight TOF_Ext;
+  protected TimeOfFlight TOF_Ent; 
   protected boolean isRangeValid_Ext;
   protected double getRange_Ext;
 
