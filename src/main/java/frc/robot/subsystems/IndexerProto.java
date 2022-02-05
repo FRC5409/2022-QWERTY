@@ -52,12 +52,11 @@ public class IndexerProto extends SubsystemBase {
 
   // time of flights
   protected TimeOfFlight TOF_Ext;
-  protected TimeOfFlight TOF_Ent; 
+  protected TimeOfFlight TOF_Ent;
   protected boolean isRangeValid_Ext;
   protected boolean isRangeValid_Ent;
   protected double getRange_Ext;
   protected double getRange_Ent;
-
 
   // shuffleboard values
   HashMap<String, NetworkTableEntry> shuffleBoardFields;
@@ -73,7 +72,8 @@ public class IndexerProto extends SubsystemBase {
     preshooterEnabled = false;
     indexerEnabled = false;
 
-    // MOTORS --------------------------------------------------------------------------------------------
+    // MOTORS
+    // --------------------------------------------------------------------------------------------
 
     // test motor for belt on indexer prototype
     indexerBelt_neo = new CANSparkMax(kIndexer.kIndexBeltMotor, MotorType.kBrushless);
@@ -93,7 +93,8 @@ public class IndexerProto extends SubsystemBase {
     // initialize PID controller
     pidController = indexerShooter_neo.getPIDController();
 
-    // shuffleboard values for motors -------------------------------------------------------------------
+    // shuffleboard values for motors
+    // -------------------------------------------------------------------
     shuffleBoardFields = new HashMap<String, NetworkTableEntry>();
     tab = Shuffleboard.getTab("IndexerControls");
     ShuffleboardLayout mLayout = tab.getLayout("motor layout", BuiltInLayouts.kList);
@@ -112,7 +113,8 @@ public class IndexerProto extends SubsystemBase {
     configPID(pidController, Constants.kIndexer.UPPER_P, Constants.kIndexer.UPPER_I, Constants.kIndexer.UPPER_D,
         Constants.kIndexer.UPPER_F);
 
-    // pid shuffle board values. ------------------------------------------------------------------------
+    // pid shuffle board values.
+    // ------------------------------------------------------------------------
     ShuffleboardLayout pidTuningLayout = tab.getLayout("PID Tuning Controls", BuiltInLayouts.kList);
     shuffleBoardFields.put("P",
         pidTuningLayout.add("P Const:", Constants.kIndexer.UPPER_P).getEntry());
@@ -131,7 +133,8 @@ public class IndexerProto extends SubsystemBase {
 
   }
 
-  // INDEXER METHODS ------------------------------------------------------------------------------------
+  // INDEXER METHODS
+  // ------------------------------------------------------------------------------------
 
   /**
    * set the speed of the indexer belt
@@ -159,7 +162,7 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * @param speed speed of belt motor
-   * sets speed of the belt motor
+   *              sets speed of the belt motor
    */
   public void setSpeedBelt(double speed) {
     speedBelt = speed;
@@ -167,7 +170,7 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * @param speed speed of pre-shooter
-   * sets speed of pre-shooter motor
+   *              sets speed of pre-shooter motor
    */
   public void setSpeedShoot(double speed) {
     speedShoot = speed;
@@ -175,7 +178,7 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * @return speedBelt
-   * returns the speed of the belt motor
+   *         returns the speed of the belt motor
    */
   public double getSpeedBelt() {
     return speedBelt;
@@ -183,7 +186,7 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * @return enc_shooter.getVelocity()
-   * gets the velocity of the encoder
+   *         gets the velocity of the encoder
    */
   public double getSpeedShoot() {
     return enc_shooter.getVelocity();
@@ -228,6 +231,7 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * is the pre-shooter enabled
+   * 
    * @return preshooterEnabled
    */
   public boolean isPreshooterEnabled() {
@@ -236,6 +240,7 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * is the indexerEnabled
+   * 
    * @return indexerEnabled
    */
   public boolean isIndexerEnabled() {
@@ -291,7 +296,7 @@ public class IndexerProto extends SubsystemBase {
   }
 
   /**
-   * disables pre-shooter 
+   * disables pre-shooter
    */
   public void disablePreshooter() {
     preshooterEnabled = false;
@@ -336,6 +341,7 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * returns the range of the TOF
+   * 
    * @return TOF_Exit.getRange()
    */
   public double getRange_Ext() {
@@ -344,20 +350,22 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * returns the range of the TOF
+   * 
    * @return TOF_Ent.getRange()
    */
-  public double getRange_Ent(){
+  public double getRange_Ent() {
     return TOF_Ent.getRange();
   }
 
   /**
    * detects whether or not the ball is in range
+   * 
    * @return true/false
    */
   public boolean ballDetectionExit() {
     double range = TOF_Ext.getRange();
 
-    if (range < 24) { //need to find number to compare with
+    if (range < 24) { // need to find number to compare with
       return true;
     }
     return false;
@@ -365,12 +373,13 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * detects whether the ball is in range or not
+   * 
    * @return true/false
    */
-  public boolean ballDetectionEnter(){
+  public boolean ballDetectionEnter() {
     double range = TOF_Ent.getRange();
 
-    if(range < 24){
+    if (range < 24) {
       return true;
     }
     return false;
@@ -378,6 +387,7 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * checks whether the range is valid
+   * 
    * @return TOF_Exit.isRangeValid()
    */
   public boolean isRangeValid_Ext() {
@@ -386,14 +396,16 @@ public class IndexerProto extends SubsystemBase {
 
   /**
    * checks whether the range is valid or not
+   * 
    * @return TOF_Ent.isRangeValid()
    */
-  public boolean isRangeValid_Ent(){
+  public boolean isRangeValid_Ent() {
     return TOF_Ent.isRangeValid();
   }
 
   /**
    * sets ranging mode
+   * 
    * @param rangeModeIn
    * @param sampleTime
    */
