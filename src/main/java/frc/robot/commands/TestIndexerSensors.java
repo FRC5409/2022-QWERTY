@@ -7,13 +7,13 @@ public class TestIndexerSensors extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private IndexerProto sys_indexerProto;
 
-    char m_colourSensor_etr;
+    char m_colourSensor_etr; // colour from sensor
 
-    char allianceColour;
+    char allianceColour; // alliance colour from the FMS
 
-    int countBalls;
+    int countBalls; // counts the number of cargo in the indexer
 
-    boolean TOF_Exit;
+    boolean TOF_Exit; // time of flight sensor at the exit
 
     public TestIndexerSensors(IndexerProto subsystem) {
         sys_indexerProto = subsystem;
