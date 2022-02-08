@@ -43,8 +43,9 @@ public final class Constants {
     }
 
     public final class Turret{
-        public static final double TURRET_RADIUS = 0;
-        public static final double GEAR_RADIUS = 0;
+        //Ratio including gearbox 
+        //126 : 1
+        public static final double GEAR_RATIO = 126;
 
         //Height in meters
         public static final double ROBOT_HEIGHT = 4;

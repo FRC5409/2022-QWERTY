@@ -48,12 +48,12 @@ public final class ShooterFlywheel extends SubsystemBase {
         mot_lower.configFactoryDefault();
 
         mot_upper.setNeutralMode(NeutralMode.Coast);
-        mot_upper.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
+        //mot_upper.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
         configPID(mot_upper, Constants.ShooterFlywheel.UPPER_P, Constants.ShooterFlywheel.UPPER_I,
                 Constants.ShooterFlywheel.UPPER_D, Constants.ShooterFlywheel.UPPER_FF);
 
         mot_lower.setNeutralMode(NeutralMode.Coast);
-        mot_lower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
+        //mot_lower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
         mot_lower.setInverted(true);
         configPID(mot_lower, Constants.ShooterFlywheel.LOWER_P, Constants.ShooterFlywheel.LOWER_I,
                 Constants.ShooterFlywheel.LOWER_D, Constants.ShooterFlywheel.LOWER_FF);
