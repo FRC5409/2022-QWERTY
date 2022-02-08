@@ -21,8 +21,7 @@ public class TestIndexerSensors extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
@@ -38,6 +37,11 @@ public class TestIndexerSensors extends CommandBase {
             countBalls = 2;
         }
 
+        // might need this chunk of code later
+        // } else if(TOF_Exit){
+        //     sys_indexerProto.moveIndexerBelt(0);
+        // }
+
         if (TOF_Ball1 == false && TOF_Exit == false && TOF_Ent == false)
             countBalls = 0;
 
@@ -48,6 +52,7 @@ public class TestIndexerSensors extends CommandBase {
     @Override
     public void end(boolean interuppted) {
         sys_indexerProto.moveIndexerBelt(0);
+        //reverse intake. 
     }
 
     @Override
