@@ -32,7 +32,7 @@ public class ChangeRPM extends SequentialCommandGroup {
         test = false;
                 
         addCommands(new SpinUpperFlywheel(flywheel, upperFlywheelSpeed),
-                new SpinLowerFlywheel(flywheel, lowerFlywheelSpeed), new SpinPreshooter(indexer, preshooterSpeed),
+                new SpinLowerFlywheel(flywheel, lowerFlywheelSpeed), new SpinPreshooter(flywheel, preshooterSpeed),
                 new SpinIndexer(indexer, lowerIndexerSpeed));
 
     }
@@ -49,7 +49,7 @@ public class ChangeRPM extends SequentialCommandGroup {
     public ChangeRPM(ShooterFlywheel flywheel, IndexerProto indexer, double flywheelSpeed, double preshooterSpeed, double indexerSpeed) {
         test = false;
         addCommands(new SpinUpperFlywheel(flywheel, flywheelSpeed),
-                new SpinLowerFlywheel(flywheel, flywheelSpeed), new SpinPreshooter(indexer, preshooterSpeed),
+                new SpinLowerFlywheel(flywheel, flywheelSpeed), new SpinPreshooter(flywheel, preshooterSpeed),
                 new SpinIndexer(indexer, indexerSpeed));
     }
 
@@ -64,7 +64,7 @@ public class ChangeRPM extends SequentialCommandGroup {
         cmd_lowerFlywheel = new SpinLowerFlywheel(flywheel, 0);
         cmd_spinindexer = new SpinIndexer(indexer, 0);
         cmd_upperFlywheel = new SpinUpperFlywheel(flywheel, 0);
-        cmd_preshooter = new SpinPreshooter(indexer, 0);
+        cmd_preshooter = new SpinPreshooter(flywheel, 0);
         addCommands(cmd_upperFlywheel, cmd_lowerFlywheel, cmd_preshooter, cmd_spinindexer);
 
         this.shuffleboardEntries = shuffleboardEntries;

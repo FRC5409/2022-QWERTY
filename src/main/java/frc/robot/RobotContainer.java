@@ -90,7 +90,7 @@ public class RobotContainer {
     m_flywheel = new ShooterFlywheel();
     m_indexerProto = new IndexerProto();
     m_testIndexBelt = new TestIndexBelt(m_indexerProto);
-    m_testIndexProto = new TestIndexProto(m_indexerProto);
+    m_testIndexProto = new TestIndexProto(m_indexerProto, m_flywheel);
     m_testIndexShoot = new TestIndexShoot(m_indexerProto);
     // m_driveTrain = new DriveTrain();
 

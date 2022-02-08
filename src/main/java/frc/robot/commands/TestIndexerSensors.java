@@ -2,10 +2,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerProto;
+import frc.robot.subsystems.shooter.ShooterFlywheel;
 
 public class TestIndexerSensors extends CommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private IndexerProto sys_indexerProto;
+    private ShooterFlywheel sys_flywheel;
 
     char m_colourSensor_etr; // colour from sensor
 
@@ -15,9 +17,11 @@ public class TestIndexerSensors extends CommandBase {
 
     boolean TOF_Exit; // time of flight sensor at the exit
 
-    public TestIndexerSensors(IndexerProto subsystem) {
+    public TestIndexerSensors(IndexerProto subsystem, ShooterFlywheel flywheel) {
         sys_indexerProto = subsystem;
-        addRequirements(subsystem);
+        sys_flywheel = flywheel;
+
+        addRequirements(subsystem, flywheel);
     }
 
     @Override
@@ -35,7 +39,7 @@ public class TestIndexerSensors extends CommandBase {
             countBalls++;
         } else if (m_colourSensor_etr == 'B' || m_colourSensor_etr == 'R' && TOF_Exit == true) {
             sys_indexerProto.spinIndexer(0);
-            sys_indexerProto.spinPreshooter(0.5);
+            sys_flywheel.spinPreshooter(0.5);
             countBalls++;
         }
 
