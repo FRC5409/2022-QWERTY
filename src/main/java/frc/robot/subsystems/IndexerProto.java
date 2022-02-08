@@ -9,7 +9,6 @@ import frc.robot.Constants.kIndexer;
 import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -23,7 +22,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -53,8 +51,11 @@ public class IndexerProto extends SubsystemBase {
   // time of flights
   protected TimeOfFlight TOF_Ext;
   protected TimeOfFlight TOF_Ent;
+  protected TimeOfFlight TOF_Ball1;
+  protected boolean isRangeValid_Ball1;
   protected boolean isRangeValid_Ext;
   protected boolean isRangeValid_Ent;
+  protected double getRange_Ball1;
   protected double getRange_Ext;
   protected double getRange_Ent;
 
@@ -136,7 +137,7 @@ public class IndexerProto extends SubsystemBase {
   // INDEXER METHODS
   // ------------------------------------------------------------------------------------
 
-  public void moveIndexerBelt(double speed){
+  public void moveIndexerBelt(double speed) {
     indexerBelt_neo.set(speed);
   }
 
@@ -358,6 +359,15 @@ public class IndexerProto extends SubsystemBase {
   /**
    * returns the range of the TOF
    * 
+   * @return TOF_Ball1.getRange()
+   */
+  public double getRange_Ball1() {
+    return TOF_Ball1.getRange();
+  }
+
+  /**
+   * returns the range of the TOF
+   * 
    * @return TOF_Ent.getRange()
    */
   public double getRange_Ent() {
@@ -376,6 +386,22 @@ public class IndexerProto extends SubsystemBase {
       return true;
     }
     return false;
+  }
+
+  /**
+   * detects whether or not the ball is in range
+   * 
+   * @return true/false
+   */
+  public boolean ballDetectionBall1() {
+    double range = TOF_Ball1.getRange();
+
+    if (range < 24) {
+      return true;
+    }
+
+    return false;
+
   }
 
   /**
@@ -399,6 +425,15 @@ public class IndexerProto extends SubsystemBase {
    */
   public boolean isRangeValid_Ext() {
     return TOF_Ext.isRangeValid();
+  }
+
+  /**
+   * checks whether the range is valid
+   * 
+   * @return TOF_Ball1.isRangeValid()
+   */
+  public boolean isRangeValid_Ball1() {
+    return TOF_Ball1.isRangeValid();
   }
 
   /**
