@@ -7,6 +7,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.kIndexer;
 
 import com.playingwithfusion.TimeOfFlight;
+import com.playingwithfusion.TimeOfFlight.RangingMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
@@ -50,7 +51,6 @@ public class IndexerProto extends SubsystemBase {
   protected TimeOfFlight TOF_Ext;
   protected boolean isRangeValid_Ext;
   protected double getRange_Ext;
-
 
   // shuffleboard values
   HashMap<String, NetworkTableEntry> shuffleBoardFields;
@@ -101,6 +101,9 @@ public class IndexerProto extends SubsystemBase {
     shuffleBoardFields.put("change",
         pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
 
+        TOF_Ext = new TimeOfFlight(0);
+        // TOF_Ext.setRangingMode(RangingMode.Short, 1000);
+
   }
 
   // testing the indexer.methods.
@@ -144,7 +147,6 @@ public class IndexerProto extends SubsystemBase {
     return indexerEnabled;
   }
 
-
   /**
    * Method for psinning the lower part of the indexer.
    * 
@@ -166,7 +168,6 @@ public class IndexerProto extends SubsystemBase {
     indexerBelt_neo.disable();
   }
 
-
   public void disableIndexer() {
     indexerEnabled = false;
     stopIndexer();
@@ -177,8 +178,8 @@ public class IndexerProto extends SubsystemBase {
     spinIndexer(speedBelt);
   }
 
-   // to get colour value (entrance colour sensor)
-   public void entranceColourTest() {
+  // to get colour value (entrance colour sensor)
+  public void entranceColourTest() {
 
     final Color detectedColour = m_colourSensor_etr.getColor();
     ColorMatchResult match = m_colorMatcher_etr.matchClosestColor(detectedColour);
@@ -220,7 +221,7 @@ public class IndexerProto extends SubsystemBase {
   public boolean ballDetectionExit() {
     double range = TOF_Ext.getRange();
 
-    if (range < 24) { //need to find number to compare with
+    if (range < 24) { // need to find number to compare with
       return true;
     }
     return false;
