@@ -85,14 +85,14 @@ public final class Constants {
 
         public static final int sampleTime = 24; 
 
-        public static final int rangeEnter_1 =  40; 
-        public static final int rangeEnter_2 = 105; 
+        public static final int rangeEnter_1 =  250; 
+        //public static final int rangeEnter_2 = 250; 
 
-        public static final int rangeBall1_1 = 160; 
-        public static final int rangeBall1_2 = 150; 
+        public static final int rangeBall1_1 = 100; 
+        //public static final int rangeBall1_2 = 150; 
 
-        public static final int rangeExit_1 = 140; 
-        public static final int rangeExit_2 = 180;
+        public static final int rangeExit_1 = 100; 
+        //public static final int rangeExit_2 = 180;
     }
 
 }
