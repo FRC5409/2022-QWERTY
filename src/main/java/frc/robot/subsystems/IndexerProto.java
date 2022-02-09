@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -239,6 +240,10 @@ public class IndexerProto extends SubsystemBase {
       System.out.println("PID Configured");
       shuffleBoardFields.get("change").setBoolean(false);
     }
+
+    SmartDashboard.putNumber("TOF Enter Range", TOF_Ent.getRange());
+    SmartDashboard.putNumber("TOF Ball 1 Range", TOF_Ball1.getRange());
+    SmartDashboard.putNumber("TOF Exit Range", TOF_Ext.getRange());
 
   }
 
