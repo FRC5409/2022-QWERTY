@@ -73,6 +73,14 @@ public class IndexerProto extends SubsystemBase {
     preshooterEnabled = false;
     indexerEnabled = false;
 
+    TOF_Ent = new TimeOfFlight(kIndexer.TOF_Ent);
+    TOF_Ball1 = new TimeOfFlight(kIndexer.TOF_Ball1);
+    TOF_Ext = new TimeOfFlight(kIndexer.TOF_Ext);
+
+    TOF_Ent.setRangingMode(TimeOfFlight.RangingMode.Short, kIndexer.sampleTime);
+    TOF_Ball1.setRangingMode(TimeOfFlight.RangingMode.Short, kIndexer.sampleTime);
+    TOF_Ext.setRangingMode(TimeOfFlight.RangingMode.Short, kIndexer.sampleTime);
+
     // MOTORS
     // --------------------------------------------------------------------------------------------
 

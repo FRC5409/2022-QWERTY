@@ -78,6 +78,21 @@ public final class Constants {
 
         // in RPM
         public static final double PRESHOOTER_TOLERANCE = 50;
+
+        public static final int TOF_Ent = 15; 
+        public static final int TOF_Ball1 = 16; 
+        public static final int TOF_Ext = 17; 
+
+        public static final int sampleTime = 24; 
+
+        public static final int rangeEnter_1 =  40; 
+        public static final int rangeEnter_2 = 105; 
+
+        public static final int rangeBall1_1 = 160; 
+        public static final int rangeBall1_2 = 150; 
+
+        public static final int rangeExit_1 = 140; 
+        public static final int rangeExit_2 = 180;
     }
 
 }
