@@ -49,19 +49,22 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getHorizontalOffset() {
-        return limelightTable.getEntry("tx").getDouble(0);
-        // return data.get("horizontalOffset").getDouble(0);
+        //return limelightTable.getEntry("tx").getDouble(0);
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+        //return data.get("horizontalOffset").getDouble(0);
     }
 
     public double getVerticalOffset() {
-        return limelightTable.getEntry("ty").getDouble(0);
-        // return data.get("verticalOffset").getDouble(0);
+        //return limelightTable.getEntry("ty").getDouble(0);
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+        //return data.get("verticalOffset").getDouble(0);
     }
 
     public double getTargetArea() {
-        System.out.println(limelightTable.getEntry("ta").getDouble(0));
-        return limelightTable.getEntry("ta").getDouble(0);
-        // return data.get("targetArea").getDouble(0);
+        //System.out.println(limelightTable.getEntry("ta").getDouble(0));
+        //return limelightTable.getEntry("ta").getDouble(0);
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
+        //return data.get("targetArea").getDouble(0);
     }
 
     public double getTargets() {

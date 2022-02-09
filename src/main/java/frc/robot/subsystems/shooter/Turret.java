@@ -7,6 +7,10 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -19,7 +23,11 @@ import frc.robot.Constants;
 public class Turret extends SubsystemBase{
 
 
-    private WPI_TalonFX mot_main;
+    //private WPI_TalonFX mot_main;
+    private CANSparkMax mot_main; 
+    private RelativeEncoder enc_main;
+    private SparkMaxPIDController controller_main;
+
 
     private boolean enabled;
 
@@ -31,10 +39,16 @@ public class Turret extends SubsystemBase{
      * Constructor for the turret. 
      */
     public Turret(){
-        mot_main = new WPI_TalonFX(Constants.kTurret.MAIN_MOTOR_ID);
-        mot_main.configFactoryDefault();
-        mot_main.configIntegratedSensorAbsoluteRange(AbsoluteSensorRange.Unsigned_0_to_360);
+        mot_main = new CANSparkMax(Constants.kTurret.MAIN_MOTOR_ID, MotorType.kBrushless);
+        //mot_main = new WPI_TalonFX(Constants.kTurret.MAIN_MOTOR_ID);
+        mot_main.restoreFactoryDefaults();
+        //mot_main.configFactoryDefault();
+        //mot_main.configIntegratedSensorAbsoluteRange(AbsoluteSensorRange.Unsigned_0_to_360);
 
+        enc_main = mot_main.getEncoder();
+        enc_main.setPosition(0);
+
+        controller_main = mot_main.getPIDController();
         enabled = false;
 
 
@@ -51,15 +65,6 @@ public class Turret extends SubsystemBase{
      */
     @Override
     public void periodic() {
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void simulationPeriodic() {
-
     }
 
     /**
@@ -84,16 +89,14 @@ public class Turret extends SubsystemBase{
      */
     public void setRotationTarget(double newTarget){
         //TODO add safetys
-        mot_main.setSelectedSensorPosition(0);
 
         target = newTarget;
 
-        double targetRadians = target*Math.PI / 180;
-        double arcLengthTurret = targetRadians*Constants.Turret.TURRET_RADIUS;
-        double positionForMotor = (arcLengthTurret / (2*Math.PI*Constants.Turret.GEAR_RADIUS)) * Constants.Falcon500.unitsPerRotation;
+        double motorRotationPerDegree = Constants.Turret.GEAR_RATIO / 360;
         
 
-        mot_main.set(TalonFXControlMode.Position, positionForMotor);
+        controller_main.setReference(motorRotationPerDegree*target, CANSparkMax.ControlType.kPosition);
+        //mot_main.set(TalonFXControlMode.Position, positionForMotor);
 
     }
 
@@ -111,10 +114,11 @@ public class Turret extends SubsystemBase{
      * @return Angle in degrees.
      */
     public double getRotation(){
-        double arcLengthTurret = mot_main.getSelectedSensorPosition() / Constants.Falcon500.unitsPerRotation * (2*Math.PI*Constants.Turret.GEAR_RADIUS);
-        double degrees = arcLengthTurret/Constants.Turret.TURRET_RADIUS * 180 / Math.PI;
-        return degrees;
+        double motorRotationPerDegree = Constants.Turret.GEAR_RATIO / 360;
+        return enc_main.getPosition()/motorRotationPerDegree;
     }
+
+
 
     /**
      * Method for getting if the turret is aligned with its target.

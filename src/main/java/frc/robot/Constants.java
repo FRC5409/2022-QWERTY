@@ -28,7 +28,15 @@ public final class Constants {
 
     public final class ShooterFlywheel {
         public static final int UPPER_MOTOR_ID = 10;
+
         public static final int LOWER_MOTOR_ID = 7;
+
+        public static final int LOWER_MOTOR_ID= 7;
+        
+
+        //in RPM
+        public static final int SHOOTER_TOLERANCE = 50;
+
 
         public static final int rpmTolerance = 1;
 
@@ -43,9 +51,16 @@ public final class Constants {
         public static final double LOWER_FF = 0.048;
     }
 
+
     public final class Turret {
         public static final double TURRET_RADIUS = 0;
         public static final double GEAR_RADIUS = 0;
+
+    public final class Turret{
+        //Ratio including gearbox 
+        //126 : 1
+        public static final double GEAR_RATIO = 126;
+
 
         // Height in meters
         public static final double ROBOT_HEIGHT = 4;
@@ -71,10 +86,12 @@ public final class Constants {
         public static final int kIndexBeltMotor = 31;
         public static final int kIndexShooterMotor = 30;
 
+
         public static final double UPPER_P = 0.0001;
         public static final double UPPER_I = 0.0;
         public static final double UPPER_D = 0.0;
         public static final double UPPER_F = 0.00017;
+
 
         // in RPM
         public static final double PRESHOOTER_TOLERANCE = 50;
@@ -93,6 +110,10 @@ public final class Constants {
 
         public static final int rangeExit_1 = 140; 
         public static final int rangeExit_2 = 180;
+
+        //in RPM
+        public static final double PRESHOOTER_TOLERANCE = 50;    
+
     }
 
 }

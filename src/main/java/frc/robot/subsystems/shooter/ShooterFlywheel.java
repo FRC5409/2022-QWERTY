@@ -48,12 +48,12 @@ public final class ShooterFlywheel extends SubsystemBase {
         mot_lower.configFactoryDefault();
 
         mot_upper.setNeutralMode(NeutralMode.Coast);
-        mot_upper.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
+        //mot_upper.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
         configPID(mot_upper, Constants.ShooterFlywheel.UPPER_P, Constants.ShooterFlywheel.UPPER_I,
                 Constants.ShooterFlywheel.UPPER_D, Constants.ShooterFlywheel.UPPER_FF);
 
         mot_lower.setNeutralMode(NeutralMode.Coast);
-        mot_lower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
+        //mot_lower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 39, 40, 1));
         mot_lower.setInverted(true);
         configPID(mot_lower, Constants.ShooterFlywheel.LOWER_P, Constants.ShooterFlywheel.LOWER_I,
                 Constants.ShooterFlywheel.LOWER_D, Constants.ShooterFlywheel.LOWER_FF);
@@ -105,9 +105,10 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        setUpperRPMTarget(shuffleBoardFields.get("upperTarget").getDouble(50));
-        setLowerRPMTarget(shuffleBoardFields.get("lowerTarget").getDouble(50));
-        shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
+        
+        //setUpperRPMTarget(shuffleBoardFields.get("upperTarget").getDouble(50));
+        //setLowerRPMTarget(shuffleBoardFields.get("lowerTarget").getDouble(50));
+        /*shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
         shuffleBoardFields.get("rpmUpper").setDouble(getUpperRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
         if (shuffleBoardFields.get("change").getBoolean(false)) {
@@ -118,7 +119,9 @@ public final class ShooterFlywheel extends SubsystemBase {
                     shuffleBoardFields.get("ld").getDouble(0), shuffleBoardFields.get("lf").getDouble(0));
             System.out.println("Pid configured");
             shuffleBoardFields.get("change").setBoolean(false);
-        }
+        }*/
+        shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
+        
     }
 
     /**
@@ -126,20 +129,9 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     @Override
     public void simulationPeriodic() {
-        setUpperRPMTarget(shuffleBoardFields.get("upperTarget").getDouble(50));
-        setLowerRPMTarget(shuffleBoardFields.get("lowerTarget").getDouble(50));
         shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
         shuffleBoardFields.get("rpmUpper").setDouble(getUpperRPM());
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
-        if (shuffleBoardFields.get("change").getBoolean(false)) {
-            disable();
-            configPID(mot_upper, shuffleBoardFields.get("up").getDouble(0), shuffleBoardFields.get("ui").getDouble(0),
-                    shuffleBoardFields.get("ud").getDouble(0), shuffleBoardFields.get("uf").getDouble(0));
-            configPID(mot_lower, shuffleBoardFields.get("lp").getDouble(0), shuffleBoardFields.get("li").getDouble(0),
-                    shuffleBoardFields.get("ld").getDouble(0), shuffleBoardFields.get("lf").getDouble(0));
-            System.out.println("Pid configured");
-            shuffleBoardFields.get("change").setBoolean(false);
-        }
     }
 
     /**
@@ -156,8 +148,8 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     public void disable() {
         enabled = false;
-        mot_upper.set(0);
-        mot_lower.set(0);
+        stopLower();
+        stopUpper();
     }
 
     /**
@@ -166,8 +158,8 @@ public final class ShooterFlywheel extends SubsystemBase {
      * @param target Target revolutions per minute.
      */
     public void setLowerRPMTarget(double target) {
+        lowerTarget = target;
         if (enabled) {
-            lowerTarget = target;
             // 600 since its rotation speed is in position change/100ms
             mot_lower.set(ControlMode.Velocity, lowerTarget * Constants.Falcon500.unitsPerRotation / 600.0);
         }
@@ -179,8 +171,8 @@ public final class ShooterFlywheel extends SubsystemBase {
      * @param target Target revolutions per minute.
      */
     public void setUpperRPMTarget(double target) {
+        upperTarget = target;
         if (enabled) {
-            upperTarget = target;
             // 600 since its rotation speed is in position change/100ms
             mot_upper.set(ControlMode.Velocity, upperTarget * Constants.Falcon500.unitsPerRotation / 600.0);
         }
@@ -218,6 +210,22 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     public double getUpperRPM() {
         return (mot_upper.getSelectedSensorVelocity() * 600.0) / Constants.Falcon500.unitsPerRotation;
+    }
+
+    public boolean upperTargetReached(){
+        return Math.abs(upperTarget - getUpperRPM()) <= Constants.ShooterFlywheel.SHOOTER_TOLERANCE;
+    }
+
+    public boolean lowerTargetReached(){
+        return Math.abs(lowerTarget - getLowerRPM()) <= Constants.ShooterFlywheel.SHOOTER_TOLERANCE;
+    }
+
+    public void stopUpper(){
+        mot_upper.disable();
+    }
+
+    public void stopLower(){
+        mot_lower.disable();
     }
 
     /**

@@ -9,9 +9,13 @@ import frc.robot.Constants.kIndexer;
 import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
+
+import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -22,6 +26,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -44,6 +51,7 @@ public class IndexerProto extends SubsystemBase {
   private Color kBlueTarget = new Color(0.120, 0.402, 0.479);
   private Color kRedTarget = new Color(0.532, 0.330, 0.137);
 
+
   // colour detection
   private char allianceColour;
   private char detectedEntranceColour;
@@ -58,6 +66,7 @@ public class IndexerProto extends SubsystemBase {
   protected double getRange_Ball1;
   protected double getRange_Ext;
   protected double getRange_Ent;
+
 
   // shuffleboard values
   HashMap<String, NetworkTableEntry> shuffleBoardFields;
@@ -84,6 +93,7 @@ public class IndexerProto extends SubsystemBase {
     // MOTORS
     // --------------------------------------------------------------------------------------------
 
+
     // test motor for belt on indexer prototype
     indexerBelt_neo = new CANSparkMax(kIndexer.kIndexBeltMotor, MotorType.kBrushless);
     indexerBelt_neo.setSmartCurrentLimit(20);
@@ -103,7 +113,7 @@ public class IndexerProto extends SubsystemBase {
     pidController = indexerShooter_neo.getPIDController();
 
     // shuffleboard values for motors
-    // -------------------------------------------------------------------
+
     shuffleBoardFields = new HashMap<String, NetworkTableEntry>();
     tab = Shuffleboard.getTab("IndexerControls");
     ShuffleboardLayout mLayout = tab.getLayout("motor layout", BuiltInLayouts.kList);
@@ -123,7 +133,7 @@ public class IndexerProto extends SubsystemBase {
         Constants.kIndexer.UPPER_F);
 
     // pid shuffle board values.
-    // ------------------------------------------------------------------------
+
     ShuffleboardLayout pidTuningLayout = tab.getLayout("PID Tuning Controls", BuiltInLayouts.kList);
     shuffleBoardFields.put("P",
         pidTuningLayout.add("P Const:", Constants.kIndexer.UPPER_P).getEntry());
@@ -152,10 +162,11 @@ public class IndexerProto extends SubsystemBase {
   /**
    * set the speed of the indexer belt
    */
+
   public void indexBeltOn() {
     indexerBelt_neo.set(speedBelt);
   }
-
+  
   /**
    * set pidController
    */
@@ -163,6 +174,7 @@ public class IndexerProto extends SubsystemBase {
     pidController.setReference(shuffleBoardFields.get("motor speed shooter").getDouble(50),
         CANSparkMax.ControlType.kVelocity);
     // indexerShooter_neo.set(1);
+
   }
 
   /**
@@ -188,6 +200,7 @@ public class IndexerProto extends SubsystemBase {
   public void setSpeedShoot(double speed) {
     speedShoot = speed;
   }
+
 
   /**
    * @return speedBelt
@@ -242,23 +255,28 @@ public class IndexerProto extends SubsystemBase {
 
   }
 
+
   /**
    * is the pre-shooter enabled
    * 
    * @return preshooterEnabled
    */
+
   public boolean isPreshooterEnabled() {
     return preshooterEnabled;
   }
+
 
   /**
    * is the indexerEnabled
    * 
    * @return indexerEnabled
    */
+
   public boolean isIndexerEnabled() {
     return indexerEnabled;
   }
+
 
   /**
    * stops pre-shooter motor
@@ -344,6 +362,7 @@ public class IndexerProto extends SubsystemBase {
    * 
    * @return something idk
    */
+
   public boolean preshooterReachedTarget() {
     return Math.abs(speedShoot - getSpeedShoot()) <= Constants.kIndexer.PRESHOOTER_TOLERANCE;
   }
@@ -421,6 +440,7 @@ public class IndexerProto extends SubsystemBase {
     double range = TOF_Ent.getRange();
 
     if (range < 24) {
+
       return true;
     }
     return false;
