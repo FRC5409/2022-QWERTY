@@ -9,11 +9,13 @@ import frc.robot.Constants.kIndexer;
 import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
+
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -24,7 +26,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -47,14 +51,21 @@ public class IndexerProto extends SubsystemBase {
   private Color kBlueTarget = new Color(0.120, 0.402, 0.479);
   private Color kRedTarget = new Color(0.532, 0.330, 0.137);
 
+
   // colour detection
   private char allianceColour;
   private char detectedEntranceColour;
 
   // time of flights
   protected TimeOfFlight TOF_Ext;
+  protected TimeOfFlight TOF_Ent;
+  protected TimeOfFlight TOF_Ball1;
+  protected boolean isRangeValid_Ball1;
   protected boolean isRangeValid_Ext;
+  protected boolean isRangeValid_Ent;
+  protected double getRange_Ball1;
   protected double getRange_Ext;
+  protected double getRange_Ent;
 
 
   // shuffleboard values
@@ -70,6 +81,19 @@ public class IndexerProto extends SubsystemBase {
   public IndexerProto() {
     preshooterEnabled = false;
     indexerEnabled = false;
+
+    TOF_Ent = new TimeOfFlight(kIndexer.TOF_Ent);
+    TOF_Ball1 = new TimeOfFlight(kIndexer.TOF_Ball1);
+    TOF_Ext = new TimeOfFlight(kIndexer.TOF_Ext);
+
+    TOF_Ent.setRangingMode(TimeOfFlight.RangingMode.Short, kIndexer.sampleTime);
+    TOF_Ball1.setRangingMode(TimeOfFlight.RangingMode.Short, kIndexer.sampleTime);
+    TOF_Ext.setRangingMode(TimeOfFlight.RangingMode.Short, kIndexer.sampleTime);
+
+    // MOTORS
+    // --------------------------------------------------------------------------------------------
+
+
     // test motor for belt on indexer prototype
     indexerBelt_neo = new CANSparkMax(kIndexer.kIndexBeltMotor, MotorType.kBrushless);
     indexerBelt_neo.setSmartCurrentLimit(20);
@@ -89,6 +113,7 @@ public class IndexerProto extends SubsystemBase {
     pidController = indexerShooter_neo.getPIDController();
 
     // shuffleboard values for motors
+
     shuffleBoardFields = new HashMap<String, NetworkTableEntry>();
     tab = Shuffleboard.getTab("IndexerControls");
     ShuffleboardLayout mLayout = tab.getLayout("motor layout", BuiltInLayouts.kList);
@@ -108,6 +133,7 @@ public class IndexerProto extends SubsystemBase {
         Constants.kIndexer.UPPER_F);
 
     // pid shuffle board values.
+
     ShuffleboardLayout pidTuningLayout = tab.getLayout("PID Tuning Controls", BuiltInLayouts.kList);
     shuffleBoardFields.put("P",
         pidTuningLayout.add("P Const:", Constants.kIndexer.UPPER_P).getEntry());
@@ -126,34 +152,68 @@ public class IndexerProto extends SubsystemBase {
 
   }
 
-  // testing the indexer.methods.
+  // INDEXER METHODS
+  // ------------------------------------------------------------------------------------
+
+  public void moveIndexerBelt(double speed) {
+    indexerBelt_neo.set(speed);
+  }
+
+  /**
+   * set the speed of the indexer belt
+   */
+
   public void indexBeltOn() {
     indexerBelt_neo.set(speedBelt);
   }
-
+  
+  /**
+   * set pidController
+   */
   public void indexShootOn() {
     pidController.setReference(shuffleBoardFields.get("motor speed shooter").getDouble(50),
         CANSparkMax.ControlType.kVelocity);
     // indexerShooter_neo.set(1);
+
   }
 
+  /**
+   * turns off the pre-shooter motor
+   */
   public void indexShootOff() {
     indexerShooter_neo.set(0);
     // pidController.setReference(0, CANSparkMax.ControlType.kVelocity);
   }
 
+  /**
+   * @param speed speed of belt motor
+   *              sets speed of the belt motor
+   */
   public void setSpeedBelt(double speed) {
     speedBelt = speed;
   }
 
+  /**
+   * @param speed speed of pre-shooter
+   *              sets speed of pre-shooter motor
+   */
   public void setSpeedShoot(double speed) {
     speedShoot = speed;
   }
 
+
+  /**
+   * @return speedBelt
+   *         returns the speed of the belt motor
+   */
   public double getSpeedBelt() {
     return speedBelt;
   }
 
+  /**
+   * @return enc_shooter.getVelocity()
+   *         gets the velocity of the encoder
+   */
   public double getSpeedShoot() {
     return enc_shooter.getVelocity();
     // return speedShoot;
@@ -195,14 +255,32 @@ public class IndexerProto extends SubsystemBase {
 
   }
 
+
+  /**
+   * is the pre-shooter enabled
+   * 
+   * @return preshooterEnabled
+   */
+
   public boolean isPreshooterEnabled() {
     return preshooterEnabled;
   }
+
+
+  /**
+   * is the indexerEnabled
+   * 
+   * @return indexerEnabled
+   */
 
   public boolean isIndexerEnabled() {
     return indexerEnabled;
   }
 
+
+  /**
+   * stops pre-shooter motor
+   */
   public void stopPreshooter() {
     // indexerShooter_neo.stopMotor();
     indexerShooter_neo.disable();
@@ -240,92 +318,171 @@ public class IndexerProto extends SubsystemBase {
     }
   }
 
+  /**
+   * stops indexer belt motor
+   */
   public void stopIndexer() {
     // indexerBelt_neo.stopMotor();
     indexerBelt_neo.disable();
   }
 
+  /**
+   * disables pre-shooter
+   */
   public void disablePreshooter() {
     preshooterEnabled = false;
     stopPreshooter();
   }
 
+  /**
+   * disables indexer
+   */
   public void disableIndexer() {
     indexerEnabled = false;
     stopIndexer();
   }
 
+  /**
+   * enables preshooter
+   */
   public void enablePreshooter() {
     preshooterEnabled = true;
     spinPreshooter(speedShoot);
   }
 
+  /**
+   * enables indexer
+   */
   public void enableIndexer() {
     indexerEnabled = true;
     spinIndexer(speedBelt);
   }
 
+  /**
+   * 
+   * @return something idk
+   */
+
   public boolean preshooterReachedTarget() {
     return Math.abs(speedShoot - getSpeedShoot()) <= Constants.kIndexer.PRESHOOTER_TOLERANCE;
-  }
-
-   // to get colour value (entrance colour sensor)
-   public void entranceColourTest() {
-
-    final Color detectedColour = m_colourSensor_etr.getColor();
-    ColorMatchResult match = m_colorMatcher_etr.matchClosestColor(detectedColour);
-
-    final double IR = m_colourSensor_etr.getIR();
-    final int proximity = m_colourSensor_etr.getProximity();
-
-    SmartDashboard.putNumber("Entrance blue value", match.color.blue);
-    SmartDashboard.putNumber("Entrance red value", match.color.red);
-    SmartDashboard.putNumber("Entrance green value", match.color.green);
-    SmartDashboard.putNumber("Entrance confidence", match.confidence);
-    SmartDashboard.putNumber("Entrance proximity", proximity);
-    SmartDashboard.putNumber("Entrance IR", IR);
-
-  }
-
-  public void entranceColourCalibration() {
-
-    final Color detectedColor = m_colourSensor_etr.getColor();
-    ColorMatchResult match = m_colorMatcher_etr.matchClosestColor(detectedColor);
-
-    if (match.color == kBlueTarget) {
-      detectedEntranceColour = 'B';
-    } else if (match.color == kRedTarget) {
-      detectedEntranceColour = 'R';
-    } else {
-      detectedEntranceColour = 'U';
-    }
   }
 
   public char getEntranceColour() {
     return detectedEntranceColour;
   }
 
+  // TIME OF FLIGHT METHODS
+  // ----------------------------------------------------------------------------
+
+  /**
+   * returns the range of the TOF
+   * 
+   * @return TOF_Exit.getRange()
+   */
   public double getRange_Ext() {
     return TOF_Ext.getRange();
   }
 
+  /**
+   * returns the range of the TOF
+   * 
+   * @return TOF_Ball1.getRange()
+   */
+  public double getRange_Ball1() {
+    return TOF_Ball1.getRange();
+  }
+
+  /**
+   * returns the range of the TOF
+   * 
+   * @return TOF_Ent.getRange()
+   */
+  public double getRange_Ent() {
+    return TOF_Ent.getRange();
+  }
+
+  /**
+   * detects whether or not the ball is in range
+   * 
+   * @return true/false
+   */
   public boolean ballDetectionExit() {
     double range = TOF_Ext.getRange();
 
-    if (range < 24) { //need to find number to compare with
+    if (range < 24) { // need to find number to compare with
       return true;
     }
     return false;
   }
 
+  /**
+   * detects whether or not the ball is in range
+   * 
+   * @return true/false
+   */
+  public boolean ballDetectionBall1() {
+    double range = TOF_Ball1.getRange();
+
+    if (range < 24) {
+      return true;
+    }
+
+    return false;
+
+  }
+
+  /**
+   * detects whether the ball is in range or not
+   * 
+   * @return true/false
+   */
+  public boolean ballDetectionEnter() {
+    double range = TOF_Ent.getRange();
+
+    if (range < 24) {
+
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * checks whether the range is valid
+   * 
+   * @return TOF_Exit.isRangeValid()
+   */
   public boolean isRangeValid_Ext() {
     return TOF_Ext.isRangeValid();
   }
 
+  /**
+   * checks whether the range is valid
+   * 
+   * @return TOF_Ball1.isRangeValid()
+   */
+  public boolean isRangeValid_Ball1() {
+    return TOF_Ball1.isRangeValid();
+  }
+
+  /**
+   * checks whether the range is valid or not
+   * 
+   * @return TOF_Ent.isRangeValid()
+   */
+  public boolean isRangeValid_Ent() {
+    return TOF_Ent.isRangeValid();
+  }
+
+  /**
+   * sets ranging mode
+   * 
+   * @param rangeModeIn
+   * @param sampleTime
+   */
   public void setRangingMode(TimeOfFlight.RangingMode rangeModeIn, double sampleTime) {
     if (sampleTime > 24) {
       sampleTime = 24;
-      TOF_Ent.setRangingMode(rangeModeIn, sampleTime);
+      TOF_Ext.setRangingMode(rangeModeIn, sampleTime);
     }
   }
 }
