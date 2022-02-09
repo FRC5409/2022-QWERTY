@@ -17,6 +17,7 @@ import frc.robot.commands.TuningTesting;
 import frc.robot.subsystems.Colour;
 import frc.robot.commands.TestIndexProto;
 import frc.robot.commands.TestIndexShoot;
+import frc.robot.commands.TestIndexerSensors;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,6 +41,7 @@ public class RobotContainer {
   private final TestIndexBelt m_testIndexBelt;
   private final TestIndexShoot m_testIndexShoot;
   private final TestIndexProto m_testIndexProto;
+  private final TestIndexerSensors m_testIndexerSensors; 
 
   //private final Limelight limelight;
 
@@ -75,6 +77,7 @@ public class RobotContainer {
     m_testIndexBelt = new TestIndexBelt(m_indexerProto);
     m_testIndexProto = new TestIndexProto(m_indexerProto);
     m_testIndexShoot = new TestIndexShoot(m_indexerProto);
+    m_testIndexerSensors = new TestIndexerSensors(m_indexerProto);
     //m_driveTrain = new DriveTrain();
 
     //limelight = new Limelight();
@@ -95,7 +98,7 @@ public class RobotContainer {
     but_main_A.whenPressed(new EnableShooter(m_flywheel));
 
     but_main_X.whenPressed(new TestIndexBelt(m_indexerProto));
-    but_main_Y.whenPressed(new TestIndexShoot(m_indexerProto));
+    but_main_Y.whenPressed(new TestIndexerSensors(m_indexerProto));
     but_main_RBumper.whenPressed(new TestIndexProto(m_indexerProto));
     but_main_B.whenPressed(new TuningTesting(m_colour));
   }
