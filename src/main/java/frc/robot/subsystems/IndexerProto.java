@@ -395,7 +395,7 @@ public class IndexerProto extends SubsystemBase {
   public boolean ballDetectionExit() {
     double range = TOF_Ext.getRange();
 
-    if (range < 24) { // need to find number to compare with
+    if (range < kIndexer.rangeExit_1) { // need to find number to compare with
       return true;
     }
     return false;
@@ -409,7 +409,7 @@ public class IndexerProto extends SubsystemBase {
   public boolean ballDetectionBall1() {
     double range = TOF_Ball1.getRange();
 
-    if (range < 24) {
+    if (range < kIndexer.rangeBall1_1) {
       return true;
     }
 
@@ -425,7 +425,7 @@ public class IndexerProto extends SubsystemBase {
   public boolean ballDetectionEnter() {
     double range = TOF_Ent.getRange();
 
-    if (range < 24) {
+    if (range < kIndexer.rangeEnter_1) {
       return true;
     }
     return false;
