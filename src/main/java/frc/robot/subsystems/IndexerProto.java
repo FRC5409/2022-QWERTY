@@ -325,7 +325,7 @@ public class IndexerProto extends SubsystemBase {
   public void setRangingMode(TimeOfFlight.RangingMode rangeModeIn, double sampleTime) {
     if (sampleTime > 24) {
       sampleTime = 24;
-      TOF_Ent.setRangingMode(rangeModeIn, sampleTime);
+      TOF_Ext.setRangingMode(rangeModeIn, sampleTime);
     }
   }
 }
