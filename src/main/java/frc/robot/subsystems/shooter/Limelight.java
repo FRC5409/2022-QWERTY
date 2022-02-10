@@ -2,8 +2,6 @@ package frc.robot.subsystems.shooter;
 
 import java.util.HashMap;
 
-import javax.naming.LimitExceededException;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -13,6 +11,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+/**
+ * Class for getting data from the Limelight. 
+ * 
+ * @author Akil Pathiranage
+ */
 public class Limelight extends SubsystemBase {
 
     double horizontalOffset;
@@ -25,6 +28,9 @@ public class Limelight extends SubsystemBase {
 
     NetworkTable limelightTable;
 
+    /**
+     * Constructor for the limelight object. 
+     */
     public Limelight() {
         limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
@@ -50,27 +56,68 @@ public class Limelight extends SubsystemBase {
         shuffleboardFields.get("t").setDouble(getTargets());
     }
 
+    /**
+     * Method for getting if the limelight has one or more targets. 
+     * @return true if there is a or multiple targets, false if not.
+     */
+    public boolean hasTargets(){
+        return getTargets() >= 1;
+    }
+
+    /**
+     * Method for getting if the Limelight has a SINGULAR target.
+     * @return true if there is one target in the limelight, false if not. 
+     */
+    public boolean hasTarget(){
+        return getTargets() == 1;
+    }
+
+    /**
+     * Method for getting the horizontal offset angle from the Limelight data table.
+     * @return A double representing the offset angle from the limelight. 
+     */
     public double getHorizontalOffset() {
         return limelightTable.getEntry("tx").getDouble(0);
     }
 
+    /**
+     * Method for getting the vertical offset angle from the Limelight data table.
+     * @return A double representing the offset angle from the limelight. 
+     */
     public double getVerticalOffset() {
         return limelightTable.getEntry("ty").getDouble(0);
     }
 
+    /**
+     * Method for getting the target area from the Limelight table. Value from 0-1
+     * @return Target area percent as a double.
+     */
     public double getTargetArea() {
         return limelightTable.getEntry("ta").getDouble(0);
     }
 
+    /**
+     * Method for getting the amount of targets from the Limelight data table.
+     * 
+     * @return Targets the limelight has. 
+     */
     public double getTargets() {
         return limelightTable.getEntry("tv").getDouble(0);
     }
 
+    /**
+     * Calculates the distance to the upper hub.
+     * @return Distance to the upper hub. 
+     */
     public double calculateDistanceToUpper() {
         return (2.64 - Constants.Turret.ROBOT_HEIGHT)
                 / Math.tan(Math.toRadians(getVerticalOffset() + Constants.Turret.FIXED_ANGLE));
     }
 
+    /**
+     * Calculates the distance to the lower hub.
+     * @return Distance to the lower hub. 
+     */
     public double calculateDistanceToLower(){
         return (1.04 - Constants.Turret.ROBOT_HEIGHT)
                 / Math.tan(Math.toRadians(getVerticalOffset() + Constants.Turret.FIXED_ANGLE)); 
