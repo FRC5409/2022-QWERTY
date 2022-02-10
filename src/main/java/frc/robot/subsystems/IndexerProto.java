@@ -8,22 +8,18 @@ import frc.robot.Constants.kIndexer;
 
 import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IndexerProto extends SubsystemBase {
@@ -35,19 +31,6 @@ public class IndexerProto extends SubsystemBase {
 
   // pid controller
   private SparkMaxPIDController pidController;
-
-  // colour sensor
-  private I2C.Port i2cPort_1 = I2C.Port.kOnboard;
-  private ColorSensorV3 m_colourSensor_etr = new ColorSensorV3(i2cPort_1);
-  private ColorMatch m_colorMatcher_etr = new ColorMatch();
-
-  // colours
-  private Color kBlueTarget = new Color(0.120, 0.402, 0.479);
-  private Color kRedTarget = new Color(0.532, 0.330, 0.137);
-
-  // colour detection
-  private char allianceColour;
-  private char detectedEntranceColour;
 
   // time of flights
   protected TimeOfFlight TOF_Ext;
@@ -351,10 +334,6 @@ public class IndexerProto extends SubsystemBase {
    */
   public boolean preshooterReachedTarget() {
     return Math.abs(speedShoot - getSpeedShoot()) <= Constants.kIndexer.PRESHOOTER_TOLERANCE;
-  }
-
-  public char getEntranceColour() {
-    return detectedEntranceColour;
   }
 
   // TIME OF FLIGHT METHODS

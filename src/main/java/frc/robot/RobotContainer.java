@@ -13,8 +13,6 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerProto;
 import frc.robot.subsystems.shooter.Limelight;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
-import frc.robot.commands.TuningTesting;
-import frc.robot.subsystems.Colour;
 import frc.robot.commands.TestIndexProto;
 import frc.robot.commands.TestIndexShoot;
 import frc.robot.commands.TestIndexerSensors;
@@ -33,9 +31,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterFlywheel m_flywheel;
-  private final Colour m_colour;
   //private final DriveTrain m_driveTrain;
-
 
   private final IndexerProto m_indexerProto; 
   private final TestIndexBelt m_testIndexBelt;
@@ -71,7 +67,6 @@ public class RobotContainer {
     but_main_Back = new JoystickButton(joystick_main, XboxController.Button.kBack.value);
     but_main_Start = new JoystickButton(joystick_main, XboxController.Button.kStart.value);
 
-    m_colour = new Colour();
     m_flywheel = new ShooterFlywheel();
     m_indexerProto = new IndexerProto();
     m_testIndexBelt = new TestIndexBelt(m_indexerProto);
@@ -100,7 +95,6 @@ public class RobotContainer {
     but_main_X.whenPressed(new TestIndexBelt(m_indexerProto));
     but_main_Y.whenPressed(new TestIndexerSensors(m_indexerProto));
     but_main_RBumper.whenPressed(new TestIndexProto(m_indexerProto));
-    but_main_B.whenPressed(new TuningTesting(m_colour));
   }
 
   /**
