@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.EnableShooter;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ReverseIndexer;
 import frc.robot.commands.TestIndexBelt;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerProto;
@@ -38,6 +39,7 @@ public class RobotContainer {
   private final TestIndexShoot m_testIndexShoot;
   private final TestIndexProto m_testIndexProto;
   private final TestIndexerSensors m_testIndexerSensors; 
+  private final ReverseIndexer m_reverseIndexer;
 
   //private final Limelight limelight;
 
@@ -73,6 +75,7 @@ public class RobotContainer {
     m_testIndexProto = new TestIndexProto(m_indexerProto);
     m_testIndexShoot = new TestIndexShoot(m_indexerProto);
     m_testIndexerSensors = new TestIndexerSensors(m_indexerProto);
+    m_reverseIndexer = new ReverseIndexer(m_indexerProto);
     //m_driveTrain = new DriveTrain();
 
     //limelight = new Limelight();
@@ -92,7 +95,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     but_main_A.whenPressed(new EnableShooter(m_flywheel));
 
-    but_main_X.whenPressed(new TestIndexBelt(m_indexerProto));
+    but_main_X.whenPressed(new ReverseIndexer(m_indexerProto));
     but_main_Y.whenPressed(new TestIndexerSensors(m_indexerProto));
     but_main_RBumper.whenPressed(new TestIndexProto(m_indexerProto));
   }

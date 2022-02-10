@@ -30,7 +30,7 @@ public class TestIndexerSensors extends CommandBase {
         TOF_Ball1 = sys_indexerProto.ballDetectionBall1();
 
         if (TOF_Ent) {
-            sys_indexerProto.moveIndexerBelt(1);
+            sys_indexerProto.moveIndexerBelt(0.5);
             countBalls = 1;
         } else if (TOF_Ball1 && !TOF_Exit) {
             sys_indexerProto.moveIndexerBelt(0);
