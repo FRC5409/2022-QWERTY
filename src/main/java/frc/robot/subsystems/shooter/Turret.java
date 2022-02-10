@@ -1,20 +1,14 @@
 package frc.robot.subsystems.shooter;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.function.DoubleBinaryOperator;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.trajectory.TrajectoryGenerator.ControlVectorList;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -23,7 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.EnableTurret;
+
 
 public class Turret extends SubsystemBase {
 
@@ -41,7 +35,7 @@ public class Turret extends SubsystemBase {
      * Constructor for the turret.
      */
     public Turret() {
-        mot_main = new CANSparkMax(Constants.kTurret.MAIN_MOTOR_ID, MotorType.kBrushless);
+        mot_main = new CANSparkMax(Constants.Turret.MAIN_MOTOR_ID, MotorType.kBrushless);
         mot_main.restoreFactoryDefaults();
         mot_main.setIdleMode(IdleMode.kCoast);
 
@@ -49,24 +43,30 @@ public class Turret extends SubsystemBase {
         enc_main.setPosition(0);
 
         controller_main = mot_main.getPIDController();
+        controller_main.setOutputRange(-0.1, 0.1);
+        configPID(Constants.Turret.P, Constants.Turret.I, Constants.Turret.D, Constants.Turret.F);
         enabled = false;
 
         shuffleboardFields = new HashMap<String, NetworkTableEntry>();
 
         ShuffleboardTab tab = Shuffleboard.getTab("Turret");
         ShuffleboardLayout shooterControls = tab.getLayout("Turret Controls: ", BuiltInLayouts.kList);
-        shuffleboardFields.put("target", shooterControls.add("Target", 0.0).withWidget(BuiltInWidgets.kNumberSlider)
-                .withProperties(Map.of("min", -20, "max", 20)).getEntry());
-        shooterControls.add("Toggle Subsystem", new EnableTurret(this));
+        shuffleboardFields.put("target", shooterControls.add("Target", 0.0).getEntry());
+        //shooterControls.add("Toggle Subsystem", new EnableTurret(this));
         shuffleboardFields.put("encoderVals", shooterControls.add("Encoder Values", 0.0).getEntry());
 
         ShuffleboardLayout PIDTuning = tab.getLayout("PID Tuning:", BuiltInLayouts.kList);
-        shuffleboardFields.put("p", PIDTuning.add("P", 0).getEntry());
-        shuffleboardFields.put("i", PIDTuning.add("I", 0).getEntry());
-        shuffleboardFields.put("d", PIDTuning.add("D", 0).getEntry());
-        shuffleboardFields.put("f", PIDTuning.add("F", 0).getEntry());
+        shuffleboardFields.put("p", PIDTuning.add("P", Constants.Turret.P).getEntry());
+        shuffleboardFields.put("i", PIDTuning.add("I", Constants.Turret.I).getEntry());
+        shuffleboardFields.put("d", PIDTuning.add("D", Constants.Turret.D).getEntry());
+        shuffleboardFields.put("f", PIDTuning.add("F", Constants.Turret.F).getEntry());
         shuffleboardFields.put("change",
                 PIDTuning.add("Change", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
+        shuffleboardFields.put("enabled", shooterControls.add("Enabled", false).getEntry());
+
+        configPID(Constants.Turret.P, Constants.Turret.I, Constants.Turret.D, Constants.Turret.F);
+
+        //tab.add("PID", controller_main);
 
         
     }
@@ -79,12 +79,13 @@ public class Turret extends SubsystemBase {
 
         target = shuffleboardFields.get("target").getDouble(0);
         shuffleboardFields.get("encoderVals").setDouble(enc_main.getPosition());
-
+        shuffleboardFields.get("enabled").setBoolean(enabled);
         if (shuffleboardFields.get("change").getBoolean(false)) {
             disable();
             configPID(shuffleboardFields.get("p").getDouble(0), shuffleboardFields.get("i").getDouble(0),
                     shuffleboardFields.get("d").getDouble(0),
                     shuffleboardFields.get("f").getDouble(0));
+            shuffleboardFields.get("change").setBoolean(false);
         }
     }
 
@@ -119,9 +120,16 @@ public class Turret extends SubsystemBase {
 
         target = newTarget;
 
-        double motorRotationPerDegree = Constants.Turret.GEAR_RATIO / 360;
+        /*double motorRotationPerDegree = Constants.Turret.GEAR_RATIO / 360;
+        double newPosition = motorRotationPerDegree * target + enc_main.getPosition();
+        if(newPosition > Constants.Turret.UPPER_LIMIT){
+            newPosition = Constants.Turret.UPPER_LIMIT;
+        }
+        if(newPosition < Constants.Turret.LOWER_LIMIT){
+            newPosition = Constants.Turret.LOWER_LIMIT;
+        }
 
-        controller_main.setReference(motorRotationPerDegree * target, CANSparkMax.ControlType.kPosition);
+        controller_main.setReference(newPosition, CANSparkMax.ControlType.kPosition);*/
         // mot_main.set(TalonFXControlMode.Position, positionForMotor);
 
     }
@@ -132,9 +140,22 @@ public class Turret extends SubsystemBase {
     public void setRotationTarget() {
         // TODO add safetys
 
+        /*
         double motorRotationPerDegree = Constants.Turret.GEAR_RATIO / 360;
+        controller_main.setReference(motorRotationPerDegree * target, CANSparkMax.ControlType.kPosition);*/
 
-        controller_main.setReference(motorRotationPerDegree * target, CANSparkMax.ControlType.kPosition);
+        double motorRotationPerDegree = Constants.Turret.GEAR_RATIO / 360;
+        double newPosition = motorRotationPerDegree * target + enc_main.getPosition();
+        if(enabled){
+            if(newPosition > Constants.Turret.UPPER_LIMIT){
+                newPosition = Constants.Turret.UPPER_LIMIT;
+            }
+            if (newPosition < Constants.Turret.LOWER_LIMIT){
+                newPosition = Constants.Turret.LOWER_LIMIT;
+            }
+            System.out.println("Target before pass: " + target);
+            controller_main.setReference(newPosition, CANSparkMax.ControlType.kPosition);
+        }
         // mot_main.set(TalonFXControlMode.Position, positionForMotor);
 
     }

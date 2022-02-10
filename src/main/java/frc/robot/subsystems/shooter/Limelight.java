@@ -23,9 +23,11 @@ public class Limelight extends SubsystemBase {
     HashMap<String, NetworkTableEntry> data;
     HashMap<String, NetworkTableEntry> shuffleboardFields;
 
-    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTable limelightTable;
 
     public Limelight() {
+        limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+
         data = new HashMap<String, NetworkTableEntry>();
         shuffleboardFields = new HashMap<String, NetworkTableEntry>();
         data.put("horizontalOffset", limelightTable.getEntry("tx"));
@@ -49,26 +51,19 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getHorizontalOffset() {
-        //return limelightTable.getEntry("tx").getDouble(0);
-        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-        //return data.get("horizontalOffset").getDouble(0);
+        return limelightTable.getEntry("tx").getDouble(0);
     }
 
     public double getVerticalOffset() {
-        //return limelightTable.getEntry("ty").getDouble(0);
-        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
-        //return data.get("verticalOffset").getDouble(0);
+        return limelightTable.getEntry("ty").getDouble(0);
     }
 
     public double getTargetArea() {
-        //System.out.println(limelightTable.getEntry("ta").getDouble(0));
-        //return limelightTable.getEntry("ta").getDouble(0);
-        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
-        //return data.get("targetArea").getDouble(0);
+        return limelightTable.getEntry("ta").getDouble(0);
     }
 
     public double getTargets() {
-        return data.get("targets").getDouble(0);
+        return limelightTable.getEntry("tv").getDouble(0);
     }
 
     public double calculateDistanceToUpper() {

@@ -124,6 +124,7 @@ public class IndexerProto extends SubsystemBase {
     shuffleBoardFields.put("change",
         pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
 
+    TOF_Ext = new TimeOfFlight(0);
   }
 
   // testing the indexer.methods.

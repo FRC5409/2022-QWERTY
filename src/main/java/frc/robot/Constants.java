@@ -50,6 +50,16 @@ public final class Constants {
         //Height in meters
         public static final double ROBOT_HEIGHT = 4;
         public static final double FIXED_ANGLE = 45;
+        public static final int MAIN_MOTOR_ID = 12;
+        public static final double UPPER_LIMIT = 20;
+        public static final double LOWER_LIMIT = -10;
+
+
+        public static final double P =  0.35;
+        public static final double I =  0;
+        public static final double D =  1.852;
+        public static final double F =  0.0;
+
 
     }
 
@@ -57,10 +67,6 @@ public final class Constants {
         public static final double unitsPerRotation = 2048;
     }
 
-    public final class kTurret{
-        public static final int MAIN_MOTOR_ID = 0;
-
-    }
 
     public final class kColour{
         public static final int proximityThreshold = 100;

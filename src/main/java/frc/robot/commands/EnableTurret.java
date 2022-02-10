@@ -15,6 +15,7 @@ public class EnableTurret extends CommandBase{
     @Override
     public void execute() {
         System.out.println("Disabling");
+        System.out.println("Target: " + turret.getRotationTarget());
         if(turret.isEnabled()){
             turret.disable();
         } else{
