@@ -12,10 +12,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.EnableShooter;
+import frc.robot.commands.EnableTurret;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ChangeRPM;
 import frc.robot.commands.ToggleShooterAndPreshooter;
@@ -25,6 +27,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IndexerProto;
 import frc.robot.subsystems.shooter.Limelight;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
+import frc.robot.subsystems.shooter.Turret;
 import frc.robot.commands.TuningTesting;
 import frc.robot.subsystems.Colour;
 import frc.robot.commands.TestIndexProto;
@@ -52,11 +55,13 @@ public class RobotContainer {
   // private final DriveTrain m_driveTrain;
 
   private final IndexerProto m_indexerProto;
+  /*
   private final TestIndexBelt m_testIndexBelt;
   private final TestIndexShoot m_testIndexShoot;
-  private final TestIndexProto m_testIndexProto;
+  private final TestIndexProto m_testIndexProto;*/
 
   private final Limelight limelight;
+  private final Turret m_turret;
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -89,9 +94,13 @@ public class RobotContainer {
     m_colour = new Colour();
     m_flywheel = new ShooterFlywheel();
     m_indexerProto = new IndexerProto();
+    m_turret = new Turret();
+    /*
     m_testIndexBelt = new TestIndexBelt(m_indexerProto);
     m_testIndexProto = new TestIndexProto(m_indexerProto);
     m_testIndexShoot = new TestIndexShoot(m_indexerProto);
+    */
+
     // m_driveTrain = new DriveTrain();
 
     limelight = new Limelight();
@@ -117,6 +126,9 @@ public class RobotContainer {
     tab.add("Toggle Flywheel and Preshooter", new ToggleShooterAndPreshooter(m_flywheel, m_indexerProto));
     tab.add("Toggle Indexer", new ToggleIndexerIntake(m_indexerProto));
     tab.add("Toggle System", new ToggleSystem(m_flywheel, m_indexerProto));
+
+
+    Shuffleboard.getTab("Turret").add("Toggle System", new EnableTurret(m_turret));
 
     configureButtonBindings();
   }
