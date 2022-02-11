@@ -33,6 +33,10 @@ public class Limelight extends SubsystemBase {
      */
     public Limelight() {
         limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+        
+        horizontalOffset = 0;
+        verticalOffset = 0;
+        targetArea = 0;
 
         data = new HashMap<String, NetworkTableEntry>();
         shuffleboardFields = new HashMap<String, NetworkTableEntry>();
@@ -50,10 +54,19 @@ public class Limelight extends SubsystemBase {
 
     @Override
     public void periodic() {
+        update();
         shuffleboardFields.get("x").setDouble(getHorizontalOffset());
         shuffleboardFields.get("y").setDouble(getVerticalOffset());
         shuffleboardFields.get("a").setDouble(getTargetArea());
         shuffleboardFields.get("t").setDouble(getTargets());
+    }
+
+    public void update(){
+        if(hasTargets()){
+            horizontalOffset = limelightTable.getEntry("tx").getDouble(0);
+            verticalOffset =  limelightTable.getEntry("ty").getDouble(0);
+            targetArea = limelightTable.getEntry("ta").getDouble(0);
+        }
     }
 
     /**
@@ -77,7 +90,7 @@ public class Limelight extends SubsystemBase {
      * @return A double representing the offset angle from the limelight. 
      */
     public double getHorizontalOffset() {
-        return limelightTable.getEntry("tx").getDouble(0);
+        return horizontalOffset;
     }
 
     /**
@@ -85,7 +98,7 @@ public class Limelight extends SubsystemBase {
      * @return A double representing the offset angle from the limelight. 
      */
     public double getVerticalOffset() {
-        return limelightTable.getEntry("ty").getDouble(0);
+        return verticalOffset;
     }
 
     /**
@@ -93,7 +106,7 @@ public class Limelight extends SubsystemBase {
      * @return Target area percent as a double.
      */
     public double getTargetArea() {
-        return limelightTable.getEntry("ta").getDouble(0);
+        return targetArea;
     }
 
     /**

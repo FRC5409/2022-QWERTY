@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.EnableShooter;
 import frc.robot.commands.EnableTurret;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.AlignTurretWithLimelight;
 import frc.robot.commands.ChangeRPM;
 import frc.robot.commands.ToggleShooterAndPreshooter;
 import frc.robot.commands.ToggleSystem;
@@ -129,6 +130,7 @@ public class RobotContainer {
 
 
     Shuffleboard.getTab("Turret").add("Toggle System", new EnableTurret(m_turret));
+    Shuffleboard.getTab("Turret").add("Align from Limelight", new AlignTurretWithLimelight(m_turret, limelight));
 
     configureButtonBindings();
   }

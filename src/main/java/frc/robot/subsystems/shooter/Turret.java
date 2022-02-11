@@ -119,6 +119,7 @@ public class Turret extends SubsystemBase {
         // TODO add safetys
 
         target = newTarget;
+        //setRotationTarget();
 
         /*double motorRotationPerDegree = Constants.Turret.GEAR_RATIO / 360;
         double newPosition = motorRotationPerDegree * target + enc_main.getPosition();
@@ -153,7 +154,6 @@ public class Turret extends SubsystemBase {
             if (newPosition < Constants.Turret.LOWER_LIMIT){
                 newPosition = Constants.Turret.LOWER_LIMIT;
             }
-            System.out.println("Target before pass: " + target);
             controller_main.setReference(newPosition, CANSparkMax.ControlType.kPosition);
         }
         // mot_main.set(TalonFXControlMode.Position, positionForMotor);
