@@ -20,42 +20,10 @@ public class TestIndexerSensors extends CommandBase {
 
     char allianceColour; // alliance colour from the FMS
 
-    int countBalls; // counts the number of cargo in the indexer
-
-    boolean TOF_Exit; // time of flight sensor at the exit
-
 
     public TestIndexerSensors(IndexerProto subsystem) {
         sys_indexerProto = subsystem;
         addRequirements(subsystem);
-    }
-
-    @Override
-
-    public void initialize() {}
-
-    @Override
-    public void execute() {
-        TOF_Exit = sys_indexerProto.ballDetectionExit();
-        TOF_Ent = sys_indexerProto.ballDetectionEnter();
-        TOF_Ball1 = sys_indexerProto.ballDetectionBall1();
-
-        if (TOF_Ent) {
-            sys_indexerProto.moveIndexerBelt(1);
-            countBalls = 1;
-        } else if (TOF_Ball1 && !TOF_Exit) {
-            sys_indexerProto.moveIndexerBelt(0);
-            countBalls = 2;
-        }
-
-        // might need this chunk of code later
-        // } else if(TOF_Exit){
-        //     sys_indexerProto.moveIndexerBelt(0);
-        // }
-
-        if (TOF_Ball1 == false && TOF_Exit == false && TOF_Ent == false)
-
-    public void initialize() {
     }
 
     @Override
@@ -74,7 +42,6 @@ public class TestIndexerSensors extends CommandBase {
         }
 
         if (m_colourSensor_etr != 'B' || m_colourSensor_etr == 'R' && TOF_Exit == false)
-
             countBalls = 0;
 
         System.out.println(countBalls);
