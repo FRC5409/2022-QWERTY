@@ -88,7 +88,7 @@ public final class Constants {
         public static final int rangeEnter_1 =  250; 
         //public static final int rangeEnter_2 = 250; 
 
-        public static final int rangeBall1_1 = 100; 
+        public static final int rangeBall1_1 = 85; 
         //public static final int rangeBall1_2 = 150; 
 
         public static final int rangeExit_1 = 100; 

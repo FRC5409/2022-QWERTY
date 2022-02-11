@@ -95,7 +95,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     but_main_A.whenPressed(new EnableShooter(m_flywheel));
 
-    but_main_X.whenPressed(new ReverseIndexer(m_indexerProto));
+    but_main_X.whileHeld(new ReverseIndexer(m_indexerProto));
     but_main_Y.whenPressed(new TestIndexerSensors(m_indexerProto));
     but_main_RBumper.whenPressed(new TestIndexProto(m_indexerProto));
   }
