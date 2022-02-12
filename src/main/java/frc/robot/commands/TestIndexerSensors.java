@@ -9,23 +9,26 @@ public class TestIndexerSensors extends CommandBase {
     private IndexerProto sys_indexerProto;
     private ShooterFlywheel sys_flywheel;
 
-    char m_colourSensor_etr; // colour from sensor
-
-    char allianceColour; // alliance colour from the FMS
 
     int countBalls; // counts the number of cargo in the indexer
 
     boolean TOF_Exit; // time of flight sensor at the exit
 
-    public TestIndexerSensors(IndexerProto subsystem, ShooterFlywheel flywheel) {
+
+    boolean TOF_Ball1; // time of flight sensor within the indexer
+
+    boolean TOF_Ent; // time of flight sensor at the entrance
+
+    char m_colourSensor_etr; // colour from sensor
+
+    char allianceColour; // alliance colour from the FMS
+
+
+    public TestIndexerSensors(IndexerProto subsystem) {
         sys_indexerProto = subsystem;
         sys_flywheel = flywheel;
 
         addRequirements(subsystem, flywheel);
-    }
-
-    @Override
-    public void initialize() {
     }
 
     @Override
@@ -52,11 +55,16 @@ public class TestIndexerSensors extends CommandBase {
 
     @Override
     public void end(boolean interuppted) {
+
+        sys_indexerProto.moveIndexerBelt(0);
+        //reverse intake. 
+
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return sys_indexerProto.ballDetectionExit() && sys_indexerProto.isRangeValid_Ext();
+
     }
 
 }
