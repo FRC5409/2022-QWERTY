@@ -134,10 +134,12 @@ public final class ShooterFlywheel extends SubsystemBase {
         shuffleBoardFields.put("change",
                 pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
 
-        ShuffleboardLayout mLayout = tab.getLayout("motor layout", BuiltInLayouts.kList);
-        shuffleBoardFields.put("motor speed shooter",
-                mLayout.add("motor speed shooter", speedShoot).withWidget(BuiltInWidgets.kNumberSlider)
+        /*ShuffleboardLayout mLayout = tab.getLayout("motor layout", BuiltInLayouts.kList);
+        shuffleBoardFields.put("preshooterTarget",
+                mLayout.add("preshooterTargetSpeed", speedShoot).withWidget(BuiltInWidgets.kNumberSlider)
                         .withProperties(Map.of("min", 0, "max", 5000, "block increment", 100)).getEntry());
+        shuffleBoardFields.put("preshooterSpeed",
+                mLayout.add("current speed of shoot", 0).getEntry());*/
     }
 
     /**
@@ -167,8 +169,6 @@ public final class ShooterFlywheel extends SubsystemBase {
          * }
          */
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
-
-        shuffleBoardFields.get("current speed of shoot").setDouble(getSpeedShoot());
 
         if (shuffleBoardFields.get("change").getBoolean(false)) {
             indexShootOff();
