@@ -112,4 +112,8 @@ public final class Constants {
 
     }
 
+    public static final class Limelight {
+        public static final String NETWORK_TABLE_NAME = "limelight";
+    };
+
 }
