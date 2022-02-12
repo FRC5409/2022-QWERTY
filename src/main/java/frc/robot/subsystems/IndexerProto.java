@@ -7,6 +7,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.kIndexer;
 
 import com.playingwithfusion.TimeOfFlight;
+import com.playingwithfusion.TimeOfFlight.RangingMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 
@@ -36,11 +37,6 @@ public class IndexerProto extends SubsystemBase {
 
   // indexer testing motors
   protected final CANSparkMax indexerBelt_neo;
-  protected final CANSparkMax indexerShooter_neo;
-  protected RelativeEncoder enc_shooter;
-
-  // pid controller
-  private SparkMaxPIDController pidController;
 
   // colour sensor
   private I2C.Port i2cPort_1 = I2C.Port.kOnboard;
@@ -67,19 +63,17 @@ public class IndexerProto extends SubsystemBase {
   protected double getRange_Ext;
   protected double getRange_Ent;
 
-
   // shuffleboard values
   HashMap<String, NetworkTableEntry> shuffleBoardFields;
   ShuffleboardTab tab;
 
   double speedBelt = 0;
-  double speedShoot = 0;
+  // double speedShoot = 0;
 
   private boolean indexerEnabled;
-  private boolean preshooterEnabled;
+  // private boolean preshooterEnabled;
 
   public IndexerProto() {
-    preshooterEnabled = false;
     indexerEnabled = false;
 
     TOF_Ent = new TimeOfFlight(kIndexer.TOF_Ent);
@@ -100,18 +94,6 @@ public class IndexerProto extends SubsystemBase {
     indexerBelt_neo.setIdleMode(IdleMode.kBrake);
     indexerBelt_neo.burnFlash();
 
-    // test motor for indexer to shooter (flywheel thing)
-    indexerShooter_neo = new CANSparkMax(kIndexer.kIndexShooterMotor, MotorType.kBrushless);
-    indexerShooter_neo.setSmartCurrentLimit(20);
-    indexerShooter_neo.setIdleMode(IdleMode.kBrake);
-    indexerShooter_neo.setInverted(true);
-    indexerShooter_neo.burnFlash();
-
-    enc_shooter = indexerShooter_neo.getEncoder();
-
-    // initialize PID controller
-    pidController = indexerShooter_neo.getPIDController();
-
     // shuffleboard values for motors
 
     shuffleBoardFields = new HashMap<String, NetworkTableEntry>();
@@ -123,14 +105,9 @@ public class IndexerProto extends SubsystemBase {
 
     shuffleBoardFields.put("current speed of belt", mLayout.add("Current belt speed", getSpeedBelt()).getEntry());
 
-    shuffleBoardFields.put("motor speed shooter",
-        mLayout.add("motor speed shooter", speedShoot).withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 5000, "block increment", 100)).getEntry());
+    
 
     shuffleBoardFields.put("current speed of shoot", mLayout.add("Current shooter speed", getSpeedBelt()).getEntry());
-
-    configPID(pidController, Constants.kIndexer.UPPER_P, Constants.kIndexer.UPPER_I, Constants.kIndexer.UPPER_D,
-        Constants.kIndexer.UPPER_F);
 
     // pid shuffle board values.
 
@@ -150,6 +127,7 @@ public class IndexerProto extends SubsystemBase {
     shuffleBoardFields.put("change",
         pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
 
+
     TOF_Ext = new TimeOfFlight(0);
   }
 
@@ -167,58 +145,15 @@ public class IndexerProto extends SubsystemBase {
   public void indexBeltOn() {
     indexerBelt_neo.set(speedBelt);
   }
-  
-  /**
-   * set pidController
-   */
-  public void indexShootOn() {
-    pidController.setReference(shuffleBoardFields.get("motor speed shooter").getDouble(50),
-        CANSparkMax.ControlType.kVelocity);
-    // indexerShooter_neo.set(1);
 
-  }
-
-  /**
-   * turns off the pre-shooter motor
-   */
-  public void indexShootOff() {
-    indexerShooter_neo.set(0);
-    // pidController.setReference(0, CANSparkMax.ControlType.kVelocity);
-  }
-
-  /**
-   * @param speed speed of belt motor
-   *              sets speed of the belt motor
-   */
   public void setSpeedBelt(double speed) {
     speedBelt = speed;
   }
 
-  /**
-   * @param speed speed of pre-shooter
-   *              sets speed of pre-shooter motor
-   */
-  public void setSpeedShoot(double speed) {
-    speedShoot = speed;
-  }
-
-
-  /**
-   * @return speedBelt
-   *         returns the speed of the belt motor
-   */
   public double getSpeedBelt() {
     return speedBelt;
   }
 
-  /**
-   * @return enc_shooter.getVelocity()
-   *         gets the velocity of the encoder
-   */
-  public double getSpeedShoot() {
-    return enc_shooter.getVelocity();
-    // return speedShoot;
-  }
 
   /**
    * Method to configure the PID of the motor.
@@ -242,29 +177,6 @@ public class IndexerProto extends SubsystemBase {
     shuffleBoardFields.get("current speed of belt").setDouble(getSpeedBelt());
 
     // setSpeedShoot(shuffleBoardFields.get("motor speed shooter").getDouble(50));
-    shuffleBoardFields.get("current speed of shoot").setDouble(getSpeedShoot());
-
-    if (shuffleBoardFields.get("change").getBoolean(false)) {
-      indexShootOff();
-      configPID(pidController, shuffleBoardFields.get("P").getDouble(0), shuffleBoardFields.get("I").getDouble(0),
-          shuffleBoardFields.get("D").getDouble(0),
-          shuffleBoardFields.get("F").getDouble(0));
-
-      System.out.println("PID Configured");
-      shuffleBoardFields.get("change").setBoolean(false);
-    }
-
-  }
-
-
-  /**
-   * is the pre-shooter enabled
-   * 
-   * @return preshooterEnabled
-   */
-
-  public boolean isPreshooterEnabled() {
-    return preshooterEnabled;
   }
 
 
@@ -276,31 +188,6 @@ public class IndexerProto extends SubsystemBase {
 
   public boolean isIndexerEnabled() {
     return indexerEnabled;
-  }
-
-
-  /**
-   * stops pre-shooter motor
-   */
-  public void stopPreshooter() {
-    // indexerShooter_neo.stopMotor();
-    indexerShooter_neo.disable();
-  }
-
-  /**
-   * Method for spinning the pre shooter to an RPM.
-   * 
-   * @param target Target RPM.
-   */
-  public void spinPreshooter(double target) {
-    speedShoot = target;
-    if (preshooterEnabled) {
-      if (speedShoot == 0) {
-        stopPreshooter();
-      } else {
-        pidController.setReference(speedShoot, CANSparkMax.ControlType.kVelocity);
-      }
-    }
   }
 
   /**
@@ -327,46 +214,17 @@ public class IndexerProto extends SubsystemBase {
     indexerBelt_neo.disable();
   }
 
-  /**
-   * disables pre-shooter
-   */
-  public void disablePreshooter() {
-    preshooterEnabled = false;
-    stopPreshooter();
-  }
 
-  /**
-   * disables indexer
-   */
   public void disableIndexer() {
     indexerEnabled = false;
     stopIndexer();
   }
 
-  /**
-   * enables preshooter
-   */
-  public void enablePreshooter() {
-    preshooterEnabled = true;
-    spinPreshooter(speedShoot);
-  }
-
-  /**
-   * enables indexer
-   */
   public void enableIndexer() {
     indexerEnabled = true;
     spinIndexer(speedBelt);
   }
 
-  /**
-   * 
-   * @return something idk
-   */
-
-  public boolean preshooterReachedTarget() {
-    return Math.abs(speedShoot - getSpeedShoot()) <= Constants.kIndexer.PRESHOOTER_TOLERANCE;
-  }
 
   public char getEntranceColour() {
     return detectedEntranceColour;
@@ -441,7 +299,6 @@ public class IndexerProto extends SubsystemBase {
     double range = TOF_Ent.getRange();
 
     if (range < 24) {
-
       return true;
     }
     return false;

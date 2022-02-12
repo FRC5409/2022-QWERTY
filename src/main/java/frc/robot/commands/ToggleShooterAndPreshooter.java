@@ -20,10 +20,10 @@ public class ToggleShooterAndPreshooter extends CommandBase{
     public void execute() {
         if(flywheel.isEnabled()){
             flywheel.disable();
-            indexer.disablePreshooter();
+            flywheel.disablePreshooter();
         } else {
             flywheel.enable();
-            indexer.enablePreshooter();
+            flywheel.enablePreshooter();
         }        
     }
 

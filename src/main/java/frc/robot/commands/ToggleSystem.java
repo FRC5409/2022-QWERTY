@@ -21,11 +21,11 @@ public class ToggleSystem extends CommandBase{
     public void execute() {
         if(flywheel.isEnabled()){
             flywheel.disable();
-            indexer.disablePreshooter();
+            flywheel.disablePreshooter();
             indexer.disableIndexer();
         } else {
             flywheel.enable();
-            indexer.enablePreshooter();
+            flywheel.enablePreshooter();
             indexer.enableIndexer();
         }        
         
