@@ -18,8 +18,8 @@ public class AlignTurretWithLimelight extends CommandBase{
     @Override
     public void execute() {
         double turnDegrees = limelight.getHorizontalOffset();
-        turret.setRotationTarget(turnDegrees);
         turret.enable();
+        turret.turnToAngle(turnDegrees);
 
     }
 

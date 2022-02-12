@@ -54,6 +54,8 @@ public final class Constants {
         //126 : 1
         public static final double GEAR_RATIO = 126;
 
+        public static final int LIMIT_SWITCH_CHANNEL =  1;
+
 
         // Height in meters
         public static final double ROBOT_HEIGHT = 4;

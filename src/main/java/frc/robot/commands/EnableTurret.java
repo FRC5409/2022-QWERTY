@@ -20,6 +20,7 @@ public class EnableTurret extends CommandBase{
             turret.disable();
         } else{
             turret.enable();
+            turret.turnToTarget();
         }
         
     }
