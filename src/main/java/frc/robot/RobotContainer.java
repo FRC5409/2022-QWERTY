@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.commands.EnableShooter;
 import frc.robot.commands.EnableTurret;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.AlignAndShoot;
 import frc.robot.commands.AlignTurretWithLimelight;
 import frc.robot.commands.ChangeRPM;
 import frc.robot.commands.ToggleShooterAndPreshooter;
@@ -57,10 +58,6 @@ public class RobotContainer {
 
   private final IndexerProto m_indexerProto;
 
-  private final TestIndexBelt m_testIndexBelt;
-  private final TestIndexShoot m_testIndexShoot;
-  private final TestIndexProto m_testIndexProto;*/
-
   private final Limelight limelight;
   private final Turret m_turret;
 
@@ -97,11 +94,7 @@ public class RobotContainer {
     m_indexerProto = new IndexerProto();
 
     m_turret = new Turret();
-    /*
-    m_testIndexBelt = new TestIndexBelt(m_indexerProto);
-    m_testIndexProto = new TestIndexProto(m_indexerProto);
-    m_testIndexShoot = new TestIndexShoot(m_indexerProto);
-    */
+    
 
     // m_driveTrain = new DriveTrain();
 
@@ -129,9 +122,11 @@ public class RobotContainer {
     tab.add("Toggle Indexer", new ToggleIndexerIntake(m_indexerProto));
     tab.add("Toggle System", new ToggleSystem(m_flywheel, m_indexerProto));
 
-
+    tab.add("ShooterAndTurret", new AlignAndShoot(m_turret, m_flywheel, limelight, m_indexerProto));
     Shuffleboard.getTab("Turret").add("Toggle System", new EnableTurret(m_turret));
-    Shuffleboard.getTab("Turret").add("Align from Limelight", new AlignTurretWithLimelight(m_turret, limelight));
+
+    
+    Shuffleboard.getTab("Turret").add("Align from Limelight", (new AlignTurretWithLimelight(m_turret, limelight)));
 
     configureButtonBindings();
   }

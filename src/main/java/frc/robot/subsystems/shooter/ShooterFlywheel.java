@@ -182,23 +182,14 @@ public final class ShooterFlywheel extends SubsystemBase {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void simulationPeriodic() {
-        shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
-        shuffleBoardFields.get("rpmUpper").setDouble(getUpperRPM());
-        shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
-    }
 
     /**
      * Method for enabing the flywheel.
      */
     public void enable() {
         enabled = true;
-        setUpperRPMTarget(upperTarget);
-        setLowerRPMTarget(lowerTarget);
+        spinLower();
+        spinUpper();
     }
 
     /**
@@ -217,6 +208,9 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     public void setLowerRPMTarget(double target) {
         lowerTarget = target;
+    }
+
+    public void spinLower(){
         if (enabled) {
             // 600 since its rotation speed is in position change/100ms
             mot_lower.set(ControlMode.Velocity, lowerTarget * Constants.Falcon500.unitsPerRotation / 600.0);
@@ -230,12 +224,14 @@ public final class ShooterFlywheel extends SubsystemBase {
      */
     public void setUpperRPMTarget(double target) {
         upperTarget = target;
+    }
+
+    public void spinUpper(){
         if (enabled) {
             // 600 since its rotation speed is in position change/100ms
             mot_upper.set(ControlMode.Velocity, upperTarget * Constants.Falcon500.unitsPerRotation / 600.0);
         }
     }
-
     /**
      * Method for configuring the PID of the motor.
      * 

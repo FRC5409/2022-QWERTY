@@ -54,7 +54,6 @@ public class Limelight extends SubsystemBase {
 
     @Override
     public void periodic() {
-        update();
         shuffleboardFields.get("x").setDouble(getHorizontalOffset());
         shuffleboardFields.get("y").setDouble(getVerticalOffset());
         shuffleboardFields.get("a").setDouble(getTargetArea());
@@ -90,6 +89,7 @@ public class Limelight extends SubsystemBase {
      * @return A double representing the offset angle from the limelight. 
      */
     public double getHorizontalOffset() {
+        update();
         return horizontalOffset;
     }
 
@@ -98,6 +98,7 @@ public class Limelight extends SubsystemBase {
      * @return A double representing the offset angle from the limelight. 
      */
     public double getVerticalOffset() {
+        update();
         return verticalOffset;
     }
 
@@ -106,6 +107,7 @@ public class Limelight extends SubsystemBase {
      * @return Target area percent as a double.
      */
     public double getTargetArea() {
+        update();
         return targetArea;
     }
 

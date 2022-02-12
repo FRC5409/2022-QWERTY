@@ -16,7 +16,7 @@ public class SpinLowerFlywheel extends CommandBase{
 
     @Override
     public void execute() {
-            sys_flywheel.setLowerRPMTarget(targetRPM);
+        sys_flywheel.setLowerRPMTarget(targetRPM);
     }
 
     @Override

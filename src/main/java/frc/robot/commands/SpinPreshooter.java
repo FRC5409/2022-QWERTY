@@ -19,7 +19,7 @@ public class SpinPreshooter extends CommandBase {
     public void execute() {
         //m_indexer.stopPreshooter();
         //if(targetRPM != 0){
-            m_flywheel.spinPreshooter(targetRPM);
+        m_flywheel.spinPreshooter(targetRPM);
         //}
     }
 

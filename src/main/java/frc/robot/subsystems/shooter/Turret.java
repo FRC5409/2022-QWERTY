@@ -9,6 +9,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -68,7 +69,7 @@ public class Turret extends SubsystemBase {
         shuffleboardFields.put("f", PIDTuning.add("F", Constants.Turret.F).getEntry());
         shuffleboardFields.put("change",
                 PIDTuning.add("Change", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
-        shuffleboardFields.put("enabled", shooterControls.add("Enabled", false).getEntry());
+        
 
 
         configPID(Constants.Turret.P, Constants.Turret.I, Constants.Turret.D, Constants.Turret.F);
@@ -85,17 +86,17 @@ public class Turret extends SubsystemBase {
         if (!limit_switch.get()) {
             enc_main.setPosition(0);
         }
-        target = shuffleboardFields.get("target").getDouble(0);
+        //target = shuffleboardFields.get("target").getDouble(0);
         shuffleboardFields.get("encoderVals").setDouble(enc_main.getPosition());
         shuffleboardFields.get("angle").setDouble(getRotationAngle());
         shuffleboardFields.get("enabled").setBoolean(enabled);
-        if (shuffleboardFields.get("change").getBoolean(false)) {
+        /*if (shuffleboardFields.get("change").getBoolean(false)) {
             disable();
             configPID(shuffleboardFields.get("p").getDouble(0), shuffleboardFields.get("i").getDouble(0),
                     shuffleboardFields.get("d").getDouble(0),
                     shuffleboardFields.get("f").getDouble(0));
             shuffleboardFields.get("change").setBoolean(false);
-        }
+        }*/
     }
 
     /**
@@ -145,7 +146,8 @@ public class Turret extends SubsystemBase {
             if (newPosition < Constants.Turret.LOWER_LIMIT) {
                 newPosition = Constants.Turret.LOWER_LIMIT;
             }
-            controller_main.setReference(newPosition, CANSparkMax.ControlType.kPosition);
+            target = newPosition;
+            controller_main.setReference(target, CANSparkMax.ControlType.kPosition);
         }
         // mot_main.set(TalonFXControlMode.Position, positionForMotor);
 
@@ -165,7 +167,8 @@ public class Turret extends SubsystemBase {
             if (newPosition < Constants.Turret.LOWER_LIMIT) {
                 newPosition = Constants.Turret.LOWER_LIMIT;
             }
-            controller_main.setReference(newPosition, CANSparkMax.ControlType.kPosition);
+            target = newPosition;
+            controller_main.setReference(target, CANSparkMax.ControlType.kPosition);
         }
 
     }
@@ -193,8 +196,7 @@ public class Turret extends SubsystemBase {
      * @return True if its aligned, false if not.
      */
     public boolean isAligned() {
-
-        return false;
+        return Math.abs(target-enc_main.getPosition()) <= Constants.Turret.TARGET_THRESHOLD;
     }
 
     public void configPID(double P, double I, double D, double F) {

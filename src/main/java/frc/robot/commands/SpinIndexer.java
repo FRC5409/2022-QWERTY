@@ -15,9 +15,11 @@ public class SpinIndexer extends CommandBase{
         addRequirements(m_indexer);
     }
 
+
     @Override
     public void execute() {
-        m_indexer.spinIndexer(setpoint);
+        m_indexer.setSpeedBelt(setpoint);
+        m_indexer.spinIndexer();
     }
 
     @Override

@@ -64,6 +64,8 @@ public final class Constants {
         public static final double UPPER_LIMIT = 20;
         public static final double LOWER_LIMIT = -10;
 
+        public static final double TARGET_THRESHOLD = 0.01;
+
 
         public static final double P =  0.35;
         public static final double I =  0;

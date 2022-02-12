@@ -195,8 +195,7 @@ public class IndexerProto extends SubsystemBase {
    * 
    * @param target Setpoint speed for the lower indexer, in range [-1.0, 1.0].
    */
-  public void spinIndexer(double target) {
-    speedBelt = target;
+  public void spinIndexer() {
     if (indexerEnabled) {
       if (speedBelt == 0) {
         stopIndexer();
@@ -222,7 +221,7 @@ public class IndexerProto extends SubsystemBase {
 
   public void enableIndexer() {
     indexerEnabled = true;
-    spinIndexer(speedBelt);
+    spinIndexer();
   }
 
 
