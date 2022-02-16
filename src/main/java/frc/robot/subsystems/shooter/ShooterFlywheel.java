@@ -3,6 +3,8 @@ package frc.robot.subsystems.shooter;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.filechooser.FileFilter;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -15,6 +17,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -51,7 +54,7 @@ public final class ShooterFlywheel extends SubsystemBase {
     ShuffleboardTab tab;
     HashMap<String, NetworkTableEntry> shuffleBoardFields;
 
-  private boolean preshooterEnabled;
+    private boolean preshooterEnabled;
 
     /**
      * Constructs a flywheel subsystem.
@@ -69,7 +72,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         // mot_upper.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,
         // 39, 40, 1));
         configPID(mot_upper, Constants.ShooterFlywheel.UPPER_P, Constants.ShooterFlywheel.UPPER_I,
-                Constants.ShooterFlywheel.UPPER_D, Constants.ShooterFlywheel.UPPER_FF);
+               Constants.ShooterFlywheel.UPPER_D, Constants.ShooterFlywheel.UPPER_FF);
 
         mot_lower.setNeutralMode(NeutralMode.Coast);
         // mot_lower.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,
@@ -134,12 +137,17 @@ public final class ShooterFlywheel extends SubsystemBase {
         shuffleBoardFields.put("change",
                 pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
 
-        /*ShuffleboardLayout mLayout = tab.getLayout("motor layout", BuiltInLayouts.kList);
-        shuffleBoardFields.put("preshooterTarget",
-                mLayout.add("preshooterTargetSpeed", speedShoot).withWidget(BuiltInWidgets.kNumberSlider)
-                        .withProperties(Map.of("min", 0, "max", 5000, "block increment", 100)).getEntry());
-        shuffleBoardFields.put("preshooterSpeed",
-                mLayout.add("current speed of shoot", 0).getEntry());*/
+        /*
+         * ShuffleboardLayout mLayout = tab.getLayout("motor layout",
+         * BuiltInLayouts.kList);
+         * shuffleBoardFields.put("preshooterTarget",
+         * mLayout.add("preshooterTargetSpeed",
+         * speedShoot).withWidget(BuiltInWidgets.kNumberSlider)
+         * .withProperties(Map.of("min", 0, "max", 5000, "block increment",
+         * 100)).getEntry());
+         * shuffleBoardFields.put("preshooterSpeed",
+         * mLayout.add("current speed of shoot", 0).getEntry());
+         */
     }
 
     /**
@@ -150,27 +158,30 @@ public final class ShooterFlywheel extends SubsystemBase {
 
         // setUpperRPMTarget(shuffleBoardFields.get("upperTarget").getDouble(50));
         // setLowerRPMTarget(shuffleBoardFields.get("lowerTarget").getDouble(50));
-        /*
-         * shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
-         * shuffleBoardFields.get("rpmUpper").setDouble(getUpperRPM());
-         * shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
-         * if (shuffleBoardFields.get("change").getBoolean(false)) {
-         * disable();
-         * configPID(mot_upper, shuffleBoardFields.get("up").getDouble(0),
-         * shuffleBoardFields.get("ui").getDouble(0),
-         * shuffleBoardFields.get("ud").getDouble(0),
-         * shuffleBoardFields.get("uf").getDouble(0));
-         * configPID(mot_lower, shuffleBoardFields.get("lp").getDouble(0),
-         * shuffleBoardFields.get("li").getDouble(0),
-         * shuffleBoardFields.get("ld").getDouble(0),
-         * shuffleBoardFields.get("lf").getDouble(0));
-         * System.out.println("Pid configured");
-         * shuffleBoardFields.get("change").setBoolean(false);
-         * }
-         */
+
+        upperTarget = shuffleBoardFields.get("upperTarget").getDouble(50);
+        lowerTarget = shuffleBoardFields.get("lowerTarget").getDouble(50);
+        shuffleBoardFields.get("rpmLower").setDouble(getLowerRPM());
+        shuffleBoardFields.get("rpmUpper").setDouble(getUpperRPM());
+        shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
+        if (shuffleBoardFields.get("change").getBoolean(false)) {
+            disable();
+            configPID(mot_upper, shuffleBoardFields.get("up").getDouble(0),
+                    shuffleBoardFields.get("ui").getDouble(0),
+                    shuffleBoardFields.get("ud").getDouble(0),
+                    shuffleBoardFields.get("uf").getDouble(0));
+
+            configPID(mot_lower, shuffleBoardFields.get("lp").getDouble(0),
+                    shuffleBoardFields.get("li").getDouble(0),
+                    shuffleBoardFields.get("ld").getDouble(0),
+                    shuffleBoardFields.get("lf").getDouble(0));
+            System.out.println("Pid configured");
+            shuffleBoardFields.get("change").setBoolean(false);
+        }
+
         shuffleBoardFields.get("subsystemEnabled").setBoolean(enabled);
 
-        if (shuffleBoardFields.get("change").getBoolean(false)) {
+        /*if (shuffleBoardFields.get("change").getBoolean(false)) {
             indexShootOff();
             configPID(pidController, shuffleBoardFields.get("P").getDouble(0), shuffleBoardFields.get("I").getDouble(0),
                     shuffleBoardFields.get("D").getDouble(0),
@@ -178,10 +189,9 @@ public final class ShooterFlywheel extends SubsystemBase {
 
             System.out.println("PID Configured");
             shuffleBoardFields.get("change").setBoolean(false);
-        }
+        }*/
 
     }
-
 
     /**
      * Method for enabing the flywheel.
@@ -210,7 +220,7 @@ public final class ShooterFlywheel extends SubsystemBase {
         lowerTarget = target;
     }
 
-    public void spinLower(){
+    public void spinLower() {
         if (enabled) {
             // 600 since its rotation speed is in position change/100ms
             mot_lower.set(ControlMode.Velocity, lowerTarget * Constants.Falcon500.unitsPerRotation / 600.0);
@@ -226,12 +236,14 @@ public final class ShooterFlywheel extends SubsystemBase {
         upperTarget = target;
     }
 
-    public void spinUpper(){
+    public void spinUpper() {
         if (enabled) {
             // 600 since its rotation speed is in position change/100ms
+            //mot_upper.set(1);
             mot_upper.set(ControlMode.Velocity, upperTarget * Constants.Falcon500.unitsPerRotation / 600.0);
         }
     }
+
     /**
      * Method for configuring the PID of the motor.
      * 
@@ -364,5 +376,5 @@ public final class ShooterFlywheel extends SubsystemBase {
 
     public boolean isPreshooterEnabled() {
         return preshooterEnabled;
-      }
+    }
 }

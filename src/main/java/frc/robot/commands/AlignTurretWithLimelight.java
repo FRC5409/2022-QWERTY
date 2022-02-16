@@ -24,16 +24,14 @@ public class AlignTurretWithLimelight extends CommandBase{
     }
     @Override
     public void execute() {
-        if(!(Math.abs(limelight.getHorizontalOffset()) <= 2)){
-            double turnDegrees = limelight.getHorizontalOffset();
-            turret.enable();
-            turret.turnToAngle(turnDegrees);
-        }
+        double turnDegrees = limelight.getHorizontalOffset();
+        turret.enable();
+        turret.turnToAngle(turnDegrees);
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(limelight.getHorizontalOffset()) <= 2;
+        return Math.abs(limelight.getHorizontalOffset()) <= 0.1;
     }
     
     @Override

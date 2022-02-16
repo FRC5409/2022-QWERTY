@@ -128,6 +128,8 @@ public class RobotContainer {
     
     Shuffleboard.getTab("Turret").add("Align from Limelight", (new AlignTurretWithLimelight(m_turret, limelight)));
 
+    Shuffleboard.getTab("Flywheel").add("Enable Shooter", (new EnableShooter(m_flywheel)));
+
     configureButtonBindings();
   }
 

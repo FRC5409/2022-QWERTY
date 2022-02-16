@@ -37,15 +37,19 @@ public final class Constants {
 
         public static final int rpmTolerance = 1;
 
-        public static final double UPPER_P = 0.07;
+        public static final double UPPER_P = 0.29873;
         public static final double UPPER_I = 0;
         public static final double UPPER_D = 0;
-        public static final double UPPER_FF = 0.048;
+        public static final double UPPER_FF = 0.044265063;
 
-        public static final double LOWER_P = 0.07;
+        public static final double LOWER_P = 0.11;
         public static final double LOWER_I = 0;
         public static final double LOWER_D = 0;
-        public static final double LOWER_FF = 0.048;
+        public static final double LOWER_FF = 0.047293811;
+
+
+
+        
     }
 
 

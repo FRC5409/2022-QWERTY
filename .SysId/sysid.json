@@ -1,14 +1,13 @@
 {
   "SysId": {
     "Analysis Type": "General Mechanism",
-    "Analyzer": {
+    "NetworkTables Settings": {
+      "serverTeam": "5409"
+    },
+    "Program Log": {
       "window": {
         "visible": false
       }
-    },
-    "AnalyzerJSONLocation": "C:\\Users\\Admin\\Desktop\\QwertyDATA\\sysid_data20220201-165641.json",
-    "NetworkTables Settings": {
-      "serverTeam": "5409"
     },
     "mode": "Client",
     "serverTeam": "5409"
