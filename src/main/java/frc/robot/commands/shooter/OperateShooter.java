@@ -20,7 +20,7 @@ import frc.robot.util.*;
 public final class OperateShooter extends StateCommandGroup {
     private final ShooterFlywheel flywheel;
     private final ShooterTurret   turret;
-    private final Limelight      limelight;
+    private final Limelight       limelight;
     private final IndexerProto    indexer;
 
     private final ShooterModel    model;
@@ -69,6 +69,6 @@ public final class OperateShooter extends StateCommandGroup {
         limelight.disable();
 
         indexer.stopPreshooter();
-        indexer.stopPreshooter();
+        indexer.stopIndexer();
     }
 }

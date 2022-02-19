@@ -44,7 +44,7 @@ public class OperateShooterState extends StateCommandBase {
         this.turret = turret;
         this.model = model;
 
-        addRequirements(limelight, turret, flywheel);
+        addRequirements(limelight, turret, flywheel, indexer);
     }
 
     @Override
