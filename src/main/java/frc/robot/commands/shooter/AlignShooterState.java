@@ -25,6 +25,7 @@ public class AlignShooterState extends TimedStateCommand {
     @Override
     public void initialize() {
         done = false;
+        super.initialize();
     }
 
     @Override

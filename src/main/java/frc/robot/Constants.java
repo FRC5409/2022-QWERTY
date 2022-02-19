@@ -34,7 +34,7 @@ public final class Constants {
         public static final int LOWER_MOTOR_ID = 7;
 
         //in RPM
-        public static final int SHOOTER_TOLERANCE = 50;
+        public static final int SHOOTER_TOLERANCE = 240;
         public static final int rpmTolerance = 1;
 
         public static final Gains UPPER_GAINS = new Gains(0.29873, 0, 0, 0.044265063);
@@ -128,7 +128,7 @@ public final class Constants {
         );
 
         public static final Range SPEED_RANGE = new Range(
-            0, 4500
+            0, 5500
         );
 
         public static final Range DISTANCE_RANGE = new Range(
@@ -154,9 +154,9 @@ public final class Constants {
             
             @Override
             public double calculate(double x) {
-                return (Math.cos(kA * x) + 1.0) * kB + kC;
+                //return (Math.cos(kA * x) + 1.0) * kB + kC;
+                return (Math.cos(2d*Math.PI*x/SHOOTER_SWEEP_PERIOD)+1d)/2d*ROTATION_RANGE.magnitude()+ROTATION_RANGE.min();
             }
-            // return (Math.cos(2d*Math.PI*t/SHOOTER_SWEEP_PERIOD)+1d)/2d*ROTATION_RANGE.magnitude()+ROTATION_RANGE.min();
         };
 
         public static final Equation SHOOTER_SWEEP_INVERSE = new Equation() {
@@ -166,22 +166,18 @@ public final class Constants {
             
             @Override
             public double calculate(double x) {
-                return SHOOTER_SWEEP_PERIOD * Math.acos(kA * (x-kC) - 1.0) * kB;
+                //return SHOOTER_SWEEP_PERIOD * Math.acos(kA * (x-kC) - 1.0) * kB;
+                 return SHOOTER_SWEEP_PERIOD * Math.acos(2d * (x-ROTATION_RANGE.min()) / ROTATION_RANGE.magnitude() - 1d) / (Math.PI*2d);
             }
-            // return SHOOTER_SWEEP_PERIOD * Math.acos(2d * (a-ROTATION_RANGE.min()) / ROTATION_RANGE.magnitude() - 1d) / (Math.PI*2d);
         };
-
-//  -10, 20
-
-public static final double yes = (1 /(GEAR_RATIO / 360)) *20;
         
         public static final double SHOOTER_MAX_SWEEEP = 2;
     
         public static final Gains TURRET_GAINS = new Gains(
-            0, 0, 0, 0
+            0.35d, 0.0, 1.852d, 0
         );
 
-        public static final double ALIGNMENT_MAX_TIME = 0;
+        public static final double ALIGNMENT_MAX_TIME = 2;
 
         public static final double PRE_SHOOTER_DISTANCE = 0;
     }
@@ -189,13 +185,13 @@ public static final double yes = (1 /(GEAR_RATIO / 360)) *20;
     public static final class Vision {
         public static final double TARGET_HEIGHT = 104d/12.0d;
         
-        public static final double LIMELIGHT_HEIGHT = 42.75d/12.0d;
+        public static final double LIMELIGHT_HEIGHT = 39.5d/12.0d;
 
-        public static final double LIMELIGHT_PITCH = 90 - 60.4;//13.4;//13.15
+        public static final double LIMELIGHT_PITCH = 90 - 81.5;//13.4;//13.15
 
         public static final double ACQUISITION_DELAY = 0.35;
 
-        public static final double ALIGNMENT_THRESHOLD = 3.5;
+        public static final double ALIGNMENT_THRESHOLD = 1.5;
 
         public static final Equation DISTANCE_FUNCTION = new Equation() {
             private final double height = Math.abs(TARGET_HEIGHT - LIMELIGHT_HEIGHT);

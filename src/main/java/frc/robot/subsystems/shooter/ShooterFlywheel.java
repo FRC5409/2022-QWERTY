@@ -26,6 +26,7 @@ import frc.robot.util.Toggleable;
  */
 public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
     public static final double FLYWHEEL_ROTATION_RATIO = Constants.Falcon500.unitsPerRotation / 600.0;
+    public static final double FLYWHEEL_FORWARD_RATIO = 1 / FLYWHEEL_ROTATION_RATIO;
     
     private final WPI_TalonFX     mot_upper;
     private final WPI_TalonFX     mot_lower;
@@ -49,7 +50,7 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
             mot_lower.configFactoryDefault();
             mot_lower.setNeutralMode(NeutralMode.Coast);
             mot_lower.setInverted(true);
-        MotorUtils.setGains(mot_lower, 0, Constants.ShooterFlywheel.UPPER_GAINS);
+        MotorUtils.setGains(mot_lower, 0, Constants.ShooterFlywheel.LOWER_GAINS);
 
     
         enabled = false;
@@ -178,7 +179,7 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
      * @return A double representing the RPM of the motor.
      */
     public double getLowerVelocity() {
-        return mot_lower.getSelectedSensorVelocity() * Constants.Falcon500.unitsPerRotation;
+        return mot_lower.getSelectedSensorVelocity() * FLYWHEEL_FORWARD_RATIO;
     }
 
     /**
@@ -187,7 +188,7 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
      * @return A double representing the RPM of the motor.
      */
     public double getUpperVelocity() {
-        return mot_upper.getSelectedSensorVelocity() * Constants.Falcon500.unitsPerRotation;
+        return mot_upper.getSelectedSensorVelocity() * FLYWHEEL_FORWARD_RATIO;
     }
 
     public boolean isUpperTargetReached() {

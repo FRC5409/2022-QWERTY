@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.Gains;
@@ -60,18 +61,15 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
             enc_main.setPosition(0);
 
         controller_main = mot_main.getPIDController();
-            controller_main.setOutputRange(-0.1, 0.1);
+            controller_main.setOutputRange(-0.5, 0.5);
 
         limit_switch = new DigitalInput(Constants.Turret.LIMIT_SWITCH_CHANNEL);
 
-        dsl_hood = new DoubleSolenoid(Constants.Turret.HOOD_MODULE, PneumaticsModuleType.REVPH, 
-            Constants.Turret.HOOD_FORWARD_CHANNEL, Constants.Turret.HOOD_REVERSE_CHANNEL);
+        //dsl_hood = new DoubleSolenoid(Constants.Turret.HOOD_MODULE, PneumaticsModuleType.REVPH, 
+        //  Constants.Turret.HOOD_FORWARD_CHANNEL, Constants.Turret.HOOD_REVERSE_CHANNEL);
 
         enabled = false;
         fields = new HashMap<String, NetworkTableEntry>();
-
-
-
 
         ShuffleboardTab tab = Shuffleboard.getTab("Turret");
 
@@ -103,23 +101,28 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
         fields.get("enabled").setBoolean(enabled);
         fields.get("limitswitch").setBoolean(limit_switch.get());
 
-        if(dsl_hood.get().equals(Value.kForward)){
-            fields.get("hood").setString("Up");
-        } else if (dsl_hood.get().equals(Value.kReverse)){
-            fields.get("hood").setString("Down");
-        } else if (dsl_hood.get().equals(Value.kOff)){
-            fields.get("hood").setString("Off");
+        
+        if(!limit_switch.get()){
+            enc_main.setPosition(0);
         }
+        SmartDashboard.putNumber("encoderValue", enc_main.getPosition());
+        // if(dsl_hood.get().equals(Value.kForward)){
+        //     fields.get("hood").setString("Up");
+        // } else if (dsl_hood.get().equals(Value.kReverse)){
+        //     fields.get("hood").setString("Down");
+        // } else if (dsl_hood.get().equals(Value.kOff)){
+        //     fields.get("hood").setString("Off");
+        // }
 
 
-        setGains(
-            new Gains(    
-                fields.get("p").getDouble(0), 
-                fields.get("i").getDouble(0),
-                fields.get("d").getDouble(0),
-                fields.get("f").getDouble(0)
-            )
-        );
+        // setGains(
+        //     new Gains(    
+        //         fields.get("p").getDouble(0), 
+        //         fields.get("i").getDouble(0),
+        //         fields.get("d").getDouble(0),
+        //         fields.get("f").getDouble(0)
+        //     )
+        // );
     }
 
     /**
@@ -153,7 +156,7 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
      */
     public void setRotationTarget(double value) {
         if (!enabled) return;
-
+        
         // TODO add safety
         controller_main.setReference(
             MOTOR_ROTATION_RATIO * Constants.Shooter.ROTATION_RANGE.clamp(value), 
@@ -162,7 +165,7 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
         target = value;
     }
 
-    /**
+    /**1
      * Method for getting the current rotation target.
      * 
      * @return Angle in degrees.

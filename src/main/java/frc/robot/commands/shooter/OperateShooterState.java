@@ -63,7 +63,8 @@ public class OperateShooterState extends StateCommandBase {
         flywheel.setVelocityTarget(velocity);
 
         // Continue aligning shooter
-        turret.setRotationTarget(turret.getRotation() + target.x);
+        if (Math.abs(target.x) > Constants.Vision.ALIGNMENT_THRESHOLD)
+            turret.setRotationTarget(turret.getRotation() + target.x);
 
         if (turret.isTargetReached() && flywheel.isTargetReached()) {
             indexer.spinIndexer(1);
@@ -88,7 +89,7 @@ public class OperateShooterState extends StateCommandBase {
 
     @Override
     public boolean isFinished() {
-        return (limelight.hasTarget() && limelight.getTargetType() == TargetType.kHub);
+        return !(limelight.hasTarget() && limelight.getTargetType() == TargetType.kHub);
     }
 
     @Override

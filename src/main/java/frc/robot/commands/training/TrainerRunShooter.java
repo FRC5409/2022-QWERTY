@@ -53,6 +53,9 @@ public final class TrainerRunShooter extends StateCommandGroup {
         flywheel.enable();
         turret.enable();
         limelight.enable();
+        
+        indexer.enableIndexer();
+        indexer.enablePreshooter();
 
         super.initialize();
     }

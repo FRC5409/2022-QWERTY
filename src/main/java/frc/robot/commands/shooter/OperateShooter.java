@@ -51,12 +51,15 @@ public final class OperateShooter extends StateCommandGroup {
     @Override
     public void initialize() {
         flywheel.enable();
-        turret.enable();
         limelight.enable();
+        turret.enable();
+        
+        indexer.enableIndexer();
+        indexer.enablePreshooter();
         
         flywheel.setVelocityTarget(
             model.calculate(Constants.Shooter.PRE_SHOOTER_DISTANCE)
-            );
+        );
 
         super.initialize();
     }
@@ -70,7 +73,7 @@ public final class OperateShooter extends StateCommandGroup {
         turret.disable();
         limelight.disable();
 
-        indexer.stopPreshooter();
-        indexer.stopIndexer();
+        indexer.disableIndexer();
+        indexer.disablePreshooter();
     }
 }

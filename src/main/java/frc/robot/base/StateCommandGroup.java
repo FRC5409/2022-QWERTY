@@ -40,12 +40,13 @@ public abstract class StateCommandGroup extends CommandBase {
         // Check if state was externally set before command execution
         if (m_active == null) {
             // Use default command if specified
-            if (m_default != null) {
+            if (m_default == null) {
                 System.err.println("No initial state specified");
                 return;
             }
             
             m_active = m_default;
+            System.out.println ("Starting with state " + m_active.getStateName());
         }
 
         m_active.initialize();
@@ -63,6 +64,7 @@ public abstract class StateCommandGroup extends CommandBase {
             // 'pop' next state name off of state
             String next = m_active.next(null);
             if (next != null) {
+                System.out.println("Moving to state " + next);
                 m_active = getCommand(next);
                 m_active.initialize();
             } else 
@@ -91,6 +93,7 @@ public abstract class StateCommandGroup extends CommandBase {
             }
 
             m_requirements.addAll(cmd.getRequirements());
+            m_states.put(name, cmd);
         }
     }
 
@@ -120,7 +123,7 @@ public abstract class StateCommandGroup extends CommandBase {
 
     public StateCommand getCommand(String name) throws UnknownStateException {
         StateCommand command = m_states.get(name);
-        if (m_active == null)
+        if (command == null)
             throw new UnknownStateException("Command state '" + name + "' does not exist.");
         return command;
     }

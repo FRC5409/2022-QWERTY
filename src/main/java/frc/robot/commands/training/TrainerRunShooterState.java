@@ -52,11 +52,6 @@ public class TrainerRunShooterState extends StateCommandBase {
     }
 
     @Override
-    public void initialize() {
-        indexer.spinPreshooter(1);
-    }
-
-    @Override
     public void execute() {
         Vector2 target = limelight.getTarget();
         double velocity = context.getSetpoint().getTarget();
@@ -69,14 +64,19 @@ public class TrainerRunShooterState extends StateCommandBase {
         flywheel.setVelocityTarget(velocity);
 
         // Continue aligning shooter
-        turret.setRotationTarget(turret.getRotation() + target.x);
+        if (Math.abs(target.x) > Constants.Vision.ALIGNMENT_THRESHOLD)
+            turret.setRotationTarget(turret.getRotation() + target.x);
 
         if (turret.isTargetReached() && flywheel.isTargetReached()) {
             indexer.spinIndexer(1);
+            indexer.spinPreshooter(4500);
         }
 
         SmartDashboard.putNumber("Active Velocity", flywheel.getVelocity());
         SmartDashboard.putNumber("Aligninment Offset", target.x);
+
+        SmartDashboard.putNumber("Lower Velocity", flywheel.getLowerVelocity());
+        SmartDashboard.putNumber("Upper Velocity", flywheel.getUpperVelocity());
 
         dashboard.update();
     }
@@ -90,7 +90,7 @@ public class TrainerRunShooterState extends StateCommandBase {
 
     @Override
     public boolean isFinished() {
-        return (limelight.hasTarget() && limelight.getTargetType() == TargetType.kHub);
+        return !(limelight.hasTarget() && limelight.getTargetType() == TargetType.kHub);
     }
 
     @Override

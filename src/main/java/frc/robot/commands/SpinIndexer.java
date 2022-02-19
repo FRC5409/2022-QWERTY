@@ -16,13 +16,23 @@ public class SpinIndexer extends CommandBase{
     }
 
     @Override
+    public void initialize() {
+        m_indexer.enableIndexer();
+    }
+
+    @Override
     public void execute() {
         m_indexer.spinIndexer(setpoint);
     }
 
     @Override
+    public void end(boolean interrupted) {
+        m_indexer.stopIndexer();
+    }
+
+    @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 
     public double getSetpoint(){

@@ -244,15 +244,15 @@ public class IndexerProto extends SubsystemBase {
     // setSpeedShoot(shuffleBoardFields.get("motor speed shooter").getDouble(50));
     shuffleBoardFields.get("current speed of shoot").setDouble(getSpeedShoot());
 
-    if (shuffleBoardFields.get("change").getBoolean(false)) {
-      indexShootOff();
-      configPID(pidController, shuffleBoardFields.get("P").getDouble(0), shuffleBoardFields.get("I").getDouble(0),
-          shuffleBoardFields.get("D").getDouble(0),
-          shuffleBoardFields.get("F").getDouble(0));
+    // if (shuffleBoardFields.get("change").getBoolean(false)) {
+    //   indexShootOff();
+    //   configPID(pidController, shuffleBoardFields.get("P").getDouble(0), shuffleBoardFields.get("I").getDouble(0),
+    //       shuffleBoardFields.get("D").getDouble(0),
+    //       shuffleBoardFields.get("F").getDouble(0));
 
-      System.out.println("PID Configured");
-      shuffleBoardFields.get("change").setBoolean(false);
-    }
+    //   System.out.println("PID Configured");
+    //   shuffleBoardFields.get("change").setBoolean(false);
+    // }
 
   }
 
