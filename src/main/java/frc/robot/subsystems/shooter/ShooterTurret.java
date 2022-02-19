@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -42,6 +43,8 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
     private double                             target;
 
     private DoubleSolenoid                     dsl_hood; 
+
+    private DigitalInput                       limit_switch;
     
 
     /**
@@ -58,6 +61,7 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
         controller_main = mot_main.getPIDController();
             controller_main.setOutputRange(-0.1, 0.1);
 
+        limit_switch = new DigitalInput(Constants.Turret.LIMIT_SWITCH_CHANNEL);
 
         dsl_hood = new DoubleSolenoid(Constants.Turret.HOOD_MODULE, PneumaticsModuleType.REVPH, 
             Constants.Turret.HOOD_FORWARD_CHANNEL, Constants.Turret.HOOD_REVERSE_CHANNEL);
@@ -73,6 +77,8 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
         ShuffleboardLayout shooterControls = tab.getLayout("Turret Controls: ", BuiltInLayouts.kList);
             fields.put("target",      shooterControls.add("Target", 0.0).getEntry());
             fields.put("encoderVals", shooterControls.add("Encoder Values", 0.0).getEntry());
+            fields.put("limitswitch", shooterControls.add("Limit Switch Reading", true).getEntry());
+            fields.put("hood", shooterControls.add("Hood position", "Up").getEntry());
 
         ShuffleboardLayout PIDTuning = tab.getLayout("PID Tuning:", BuiltInLayouts.kList);
             fields.put("p",           PIDTuning.add("P", controller_main.getP()).getEntry());
@@ -94,6 +100,16 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
         target = fields.get("target").getDouble(0);
         fields.get("encoderVals").setDouble(enc_main.getPosition());
         fields.get("enabled").setBoolean(enabled);
+        fields.get("limitswitch").setBoolean(limit_switch.get());
+
+        if(dsl_hood.get().equals(Value.kForward)){
+            fields.get("hood").setString("Up");
+        } else if (dsl_hood.get().equals(Value.kReverse)){
+            fields.get("hood").setString("Down");
+        } else if (dsl_hood.get().equals(Value.kOff)){
+            fields.get("hood").setString("Off");
+        }
+
 
 
         setGains(

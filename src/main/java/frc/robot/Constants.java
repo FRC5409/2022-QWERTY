@@ -60,6 +60,8 @@ public final class Constants {
         public static final int HOOD_MODULE  =0;
         public static final int HOOD_FORWARD_CHANNEL = 0;
         public static final int HOOD_REVERSE_CHANNEL = 0;
+
+        public static final int LIMIT_SWITCH_CHANNEL = 1;
     }
 
     public final class Falcon500 {
