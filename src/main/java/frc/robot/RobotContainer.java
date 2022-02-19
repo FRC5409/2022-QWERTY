@@ -10,34 +10,13 @@ import java.util.Map;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.commands.EnableShooter;
-import frc.robot.commands.EnableTurret;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.AlignTurretWithLimelight;
-import frc.robot.commands.ChangeRPM;
-import frc.robot.commands.ToggleShooterAndPreshooter;
-import frc.robot.commands.ToggleSystem;
-import frc.robot.commands.TestIndexBelt;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.IndexerProto;
-import frc.robot.subsystems.shooter.Limelight;
-import frc.robot.subsystems.shooter.ShooterFlywheel;
-import frc.robot.subsystems.shooter.Turret;
-import frc.robot.commands.TuningTesting;
-import frc.robot.subsystems.Colour;
-import frc.robot.commands.TestIndexProto;
-import frc.robot.commands.TestIndexShoot;
-import frc.robot.commands.ToggleIndexerIntake;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.shooter.ShooterFlywheel;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.base.Joystick;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
+import frc.robot.subsystems.shooter.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -49,117 +28,69 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final ShooterFlywheel m_flywheel;
-  private final Colour m_colour;
-  // private final DriveTrain m_driveTrain;
-
-  private final IndexerProto m_indexerProto;
-  /*
-  private final TestIndexBelt m_testIndexBelt;
-  private final TestIndexShoot m_testIndexShoot;
-  private final TestIndexProto m_testIndexProto;*/
-
-  private final Limelight limelight;
-  private final Turret m_turret;
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-
-  // Define main joystick
-  private final XboxController joystick_main; // = new XboxController(0);
-  private final JoystickButton but_main_A, but_main_B, but_main_X, but_main_Y, but_main_LBumper, but_main_RBumper,
-      but_main_LAnalog, but_main_RAnalog, but_main_Back, but_main_Start;
-  // private final DefaultDrive defaultDrive;
-
-  HashMap<String, NetworkTableEntry> shuffleboardEntries;
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    joystick_main = new XboxController(0);
-
-    // Init button binds
-    but_main_A = new JoystickButton(joystick_main, XboxController.Button.kA.value);
-    but_main_B = new JoystickButton(joystick_main, XboxController.Button.kB.value);
-    but_main_X = new JoystickButton(joystick_main, XboxController.Button.kX.value);
-    but_main_Y = new JoystickButton(joystick_main, XboxController.Button.kY.value);
-    but_main_LBumper = new JoystickButton(joystick_main, XboxController.Button.kLeftBumper.value);
-    but_main_RBumper = new JoystickButton(joystick_main, XboxController.Button.kRightBumper.value);
-    but_main_LAnalog = new JoystickButton(joystick_main, XboxController.Button.kLeftStick.value);
-    but_main_RAnalog = new JoystickButton(joystick_main, XboxController.Button.kRightStick.value);
-    but_main_Back = new JoystickButton(joystick_main, XboxController.Button.kBack.value);
-    but_main_Start = new JoystickButton(joystick_main, XboxController.Button.kStart.value);
-
-    m_colour = new Colour();
-    m_flywheel = new ShooterFlywheel();
-    m_indexerProto = new IndexerProto();
-    m_turret = new Turret();
-    /*
-    m_testIndexBelt = new TestIndexBelt(m_indexerProto);
-    m_testIndexProto = new TestIndexProto(m_indexerProto);
-    m_testIndexShoot = new TestIndexShoot(m_indexerProto);
-    */
-
-    // m_driveTrain = new DriveTrain();
-
-    limelight = new Limelight();
-    // defaultDrive = new DefaultDrive(m_driveTrain, joystick_main);
-    // m_driveTrain.setDefaultCommand(defaultDrive);
-
-    // Configure the button bindings
-
-    shuffleboardEntries = new HashMap<String, NetworkTableEntry>();
-    ShuffleboardTab tab = Shuffleboard.getTab("Design Testing");
-    ShuffleboardLayout layout = tab.getLayout("Controls", BuiltInLayouts.kList);
-    shuffleboardEntries.put("upperFlywheelSpeed", layout.add("Upper Flywheel RPM", 0)
-        .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 6000)).getEntry());
-    shuffleboardEntries.put("lowerFlywheelSpeed", layout.add("Lower Flywheel RPM", 0)
-        .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 6000)).getEntry());
-    shuffleboardEntries.put("preshooterSpeed", layout.add("Preshooter RPM", 0).withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", 0, "max", 6000)).getEntry());
-    shuffleboardEntries.put("indexerSpeed", layout.add("indexer RPM", 0).withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", 0, "max", 1)).getEntry());
-
-    tab.add("Update RPM",
-        new ChangeRPM(m_flywheel, m_indexerProto, shuffleboardEntries));
-    tab.add("Toggle Flywheel and Preshooter", new ToggleShooterAndPreshooter(m_flywheel, m_indexerProto));
-    tab.add("Toggle Indexer", new ToggleIndexerIntake(m_indexerProto));
-    tab.add("Toggle System", new ToggleSystem(m_flywheel, m_indexerProto));
+    private final ShooterFlywheel flywheel;
+    private final Colour          colour;
+    private final IndexerProto    indexer;
+    private final Limelight      limelight;
+    private final ShooterTurret   turret;
 
 
-    Shuffleboard.getTab("Turret").add("Toggle System", new EnableTurret(m_turret));
-    Shuffleboard.getTab("Turret").add("Align from Limelight", new AlignTurretWithLimelight(m_turret, limelight));
+    // Define main joystick
+    private final Joystick        joystick_main;
 
-    configureButtonBindings();
-  }
+    HashMap<String, NetworkTableEntry> shuffleboard;
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-   * it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    // but_main_A.whenPressed(new EnableShooter(m_flywheel));
-    //but_main_A.whenPressed(new ShootABall(m_flywheel, m_indexerProto, 4750, 3750, 0.7));
-    //but_main_X.whenPressed(new TestIndexBelt(m_indexerProto));
-    //but_main_Y.whenPressed(new TestIndexShoot(m_indexerProto));
-    //but_main_RBumper.whenPressed(new TestIndexProto(m_indexerProto));
-    //but_main_B.whenPressed(new TuningTesting(m_colour));
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
+        joystick_main = new Joystick(0);
 
-  }
+        colour = new Colour();
+        flywheel = new ShooterFlywheel();
+        indexer = new IndexerProto();
+        turret = new ShooterTurret();
+        limelight = new Limelight();
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
-  }
+        shuffleboard = new HashMap<String, NetworkTableEntry>();
+        ShuffleboardTab tab = Shuffleboard.getTab("Design Testing");
+        ShuffleboardLayout layout = tab.getLayout("Controls", BuiltInLayouts.kList);
+        shuffleboard.put("upperFlywheelSpeed", layout.add("Upper Flywheel RPM", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 6000)).getEntry());
+        shuffleboard.put("lowerFlywheelSpeed", layout.add("Lower Flywheel RPM", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 6000)).getEntry());
+        shuffleboard.put("preshooterSpeed", layout.add("Preshooter RPM", 0).withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 0, "max", 6000)).getEntry());
+        shuffleboard.put("indexerSpeed", layout.add("indexer RPM", 0).withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 0, "max", 1)).getEntry());
+
+        tab.add("Toggle Flywheel and Preshooter", new ToggleShooterAndPreshooter(flywheel, indexer));
+        tab.add("Toggle Indexer", new ToggleIndexerIntake(indexer));
+        tab.add("Toggle System", new ToggleSystem(flywheel, indexer));
+
+        configureButtonBindings();
+    }
+
+    /**
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by
+     * instantiating a {@link GenericHID} or one of its subclasses ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+     * it to a {@link
+     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
+    private void configureButtonBindings() {
+    }
+
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        // An ExampleCommand will run in autonomous
+        return new CommandBase() { };
+    }
+
+
 }
