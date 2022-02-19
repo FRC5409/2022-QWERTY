@@ -83,7 +83,7 @@ public class Limelight extends SubsystemBase implements Toggleable  {
         
         data_entry_has_targets = limelight_data.getEntry("tv");
 
-        track_data             = new Vector3(0,0,0);
+        track_data             = new Vector3(0, 0, 0);
         target_data            = TargetType.kNone;
 
         enabled                = false;
