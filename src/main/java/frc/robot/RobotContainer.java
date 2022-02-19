@@ -28,20 +28,20 @@ import frc.robot.subsystems.shooter.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private final ShooterFlywheel flywheel;
-    private final Colour          colour;
-    private final IndexerProto    indexer;
-    private final Limelight      limelight;
-    private final ShooterTurret   turret;
+    private final ShooterFlywheel      flywheel;
+    private final Colour               colour;
+    private final IndexerProto         indexer;
+    private final Limelight            limelight;
+    private final ShooterTurret        turret;
 
 
     // Define main joystick
-    private final Joystick        joystick_main;
+    private final Joystick             joystick_main;
 
     HashMap<String, NetworkTableEntry> shuffleboard;
 
     /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
+     * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer() {
         joystick_main = new Joystick(0);

@@ -1,8 +1,7 @@
 package frc.robot.training;
 
-import org.jetbrains.annotations.Nullable;
-
 import frc.robot.util.Range;
+import org.jetbrains.annotations.Nullable;
 
 public class Setpoint {
     private final Setpoint _parent;
