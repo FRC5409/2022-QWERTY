@@ -21,13 +21,11 @@ import frc.robot.util.Range;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
     public final class kDriveTrain {
         public static final int left_front_id = 51;
         public static final int left_rear_id = 52;
         public static final int right_front_id = 53;
         public static final int right_rear_id = 54;
-
     }
 
     public static final class ShooterFlywheel {
@@ -126,7 +124,7 @@ public final class Constants {
 
         // Range Configurations
         public static final Range ROTATION_RANGE = new Range(
-            -270, 270
+            -28.571428571428573, 57.14285714285714
         );
 
         public static final Range SPEED_RANGE = new Range(
@@ -149,14 +147,34 @@ public final class Constants {
     // Smooth Sweep Constants (experimental)
         public static final double SHOOTER_SWEEP_PERIOD = 3.6;
 
-        public static final Equation SHOOTER_SWEEP_FUNCTION = t -> {
-            return (Math.cos(2d*Math.PI*t/SHOOTER_SWEEP_PERIOD)+1d)/2d*ROTATION_RANGE.magnitude()+ROTATION_RANGE.min();
+        public static final Equation SHOOTER_SWEEP_FUNCTION = new Equation() {
+            private final double kA = (2.0 * Math.PI) / SHOOTER_SWEEP_PERIOD;
+            private final double kB = 1.0 / ( 2.0 * ROTATION_RANGE.magnitude() );
+            private final double kC = ROTATION_RANGE.min();
+            
+            @Override
+            public double calculate(double x) {
+                return (Math.cos(kA * x) + 1.0) * kB + kC;
+            }
+            // return (Math.cos(2d*Math.PI*t/SHOOTER_SWEEP_PERIOD)+1d)/2d*ROTATION_RANGE.magnitude()+ROTATION_RANGE.min();
         };
 
-        public static final Equation SHOOTER_SWEEP_INVERSE = a -> {
-            return SHOOTER_SWEEP_PERIOD * Math.acos(2d * (a-ROTATION_RANGE.min()) / ROTATION_RANGE.magnitude() - 1d) / (Math.PI*2d);
+        public static final Equation SHOOTER_SWEEP_INVERSE = new Equation() {
+            private final double kA = 2.0 * (1.0 / ROTATION_RANGE.magnitude());
+            private final double kB = 1.0 / ( 2.0 * Math.PI );
+            private final double kC = ROTATION_RANGE.min();
+            
+            @Override
+            public double calculate(double x) {
+                return SHOOTER_SWEEP_PERIOD * Math.acos(kA * (x-kC) - 1.0) * kB;
+            }
+            // return SHOOTER_SWEEP_PERIOD * Math.acos(2d * (a-ROTATION_RANGE.min()) / ROTATION_RANGE.magnitude() - 1d) / (Math.PI*2d);
         };
 
+//  -10, 20
+
+public static final double yes = (1 /(GEAR_RATIO / 360)) *20;
+        
         public static final double SHOOTER_MAX_SWEEEP = 2;
     
         public static final Gains TURRET_GAINS = new Gains(
