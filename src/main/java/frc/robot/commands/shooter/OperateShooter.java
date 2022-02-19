@@ -44,6 +44,8 @@ public final class OperateShooter extends StateCommandGroup {
             new AlignShooterState(limelight, turret),
             new OperateShooterState(limelight, turret, flywheel, indexer, model)
         );
+
+        setDefaultState("frc.robot.shooter:search");
     }
 
     @Override

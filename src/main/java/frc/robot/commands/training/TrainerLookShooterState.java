@@ -64,7 +64,6 @@ public class TrainerLookShooterState extends StateCommandBase {
         turret.setRotationTarget(turret.getRotation() + target.x);
         SmartDashboard.putNumber("Aligninment Offset", target.x);
         
-
         dashboard.update();
     }
 

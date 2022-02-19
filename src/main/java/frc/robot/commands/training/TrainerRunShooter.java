@@ -44,6 +44,8 @@ public final class TrainerRunShooter extends StateCommandGroup {
             new AlignShooterState(limelight, turret),
             new TrainerRunShooterState(limelight, turret, flywheel, indexer, dashboard, context)
         );
+
+        setDefaultState("frc.robot.shooter:search");
     }
 
     @Override
