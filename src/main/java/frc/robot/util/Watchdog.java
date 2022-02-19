@@ -14,10 +14,10 @@ import edu.wpi.first.wpilibj.Timer;
  * @author Keith Davies
  */
 public final class Watchdog {
-    private final double m_expiry_time;
+    private final double expiry_time;
 
-    private       double m_timer,
-                         m_time_last;
+    private       double timer,
+                         time_last;
 
     /**
      * Constructs a Watchdog.
@@ -26,25 +26,25 @@ public final class Watchdog {
      *                    to expire when not sufficiently fed.
      */
     public Watchdog(double expiry_time) {
-        m_expiry_time = expiry_time;
+        this.expiry_time = expiry_time;
 
-        m_timer = 0;
-        m_time_last = Timer.getFPGATimestamp();
+        timer = 0;
+        time_last = Timer.getFPGATimestamp();
     }
 
     /**
      * Updates the watchdog timer.
      */
     public void update() {
-        m_timer = Timer.getFPGATimestamp()-m_time_last;
+        timer = Timer.getFPGATimestamp()-time_last;
     } 
 
     /**
      * Feeds / resets the watchdog timer.
      */
     public void feed() {
-        m_timer = 0;
-        m_time_last = Timer.getFPGATimestamp();
+        timer = 0;
+        time_last = Timer.getFPGATimestamp();
     }
 
     /**
@@ -54,6 +54,6 @@ public final class Watchdog {
      * @return Whether or not the watchdog has expired.
      */
     public boolean isExpired() {
-        return m_timer > m_expiry_time;
+        return timer > expiry_time;
     }
 }
