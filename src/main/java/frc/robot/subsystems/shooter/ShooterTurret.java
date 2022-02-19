@@ -10,6 +10,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,6 +40,8 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
 
     private HashMap<String, NetworkTableEntry> fields;
     private double                             target;
+
+    private DoubleSolenoid                     dsl_hood; 
     
 
     /**
@@ -53,8 +58,15 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
         controller_main = mot_main.getPIDController();
             controller_main.setOutputRange(-0.1, 0.1);
 
+
+        dsl_hood = new DoubleSolenoid(Constants.Turret.HOOD_MODULE, PneumaticsModuleType.REVPH, 
+            Constants.Turret.HOOD_FORWARD_CHANNEL, Constants.Turret.HOOD_REVERSE_CHANNEL);
+
         enabled = false;
         fields = new HashMap<String, NetworkTableEntry>();
+
+
+
 
         ShuffleboardTab tab = Shuffleboard.getTab("Turret");
 
@@ -166,6 +178,23 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
         controller_main.setI(gains.I);
         controller_main.setD(gains.D);
         controller_main.setFF(gains.F);
+    }
+
+    
+    /**
+     * Method for setting the hood to the up position.
+     */
+    public void hoodUpPosition(){
+        if(!enabled) return;
+        dsl_hood.set(Value.kForward);
+    }
+
+    /**
+     * Method for setting the hood to the down position.
+     */
+    public void hoodDownPosition(){
+        if(!enabled) return;
+        dsl_hood.set(Value.kReverse);
     }
 
 }

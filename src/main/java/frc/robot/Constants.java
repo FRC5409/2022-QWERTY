@@ -55,6 +55,11 @@ public final class Constants {
         public static final int    MAIN_MOTOR_ID       = 12;
         public static final Range  LIMITS              = new Range(-10, 20);
         public static final double ALIGNMENT_THRESHOLD = 0.14;
+
+        //TODO fill in pneumatics constants.
+        public static final int HOOD_MODULE  =0;
+        public static final int HOOD_FORWARD_CHANNEL = 0;
+        public static final int HOOD_REVERSE_CHANNEL = 0;
     }
 
     public final class Falcon500 {
