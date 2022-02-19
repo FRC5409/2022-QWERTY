@@ -4,19 +4,26 @@
 
 package frc.robot;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.base.Joystick;
+import frc.robot.base.Joystick.ButtonType;
+
 import frc.robot.commands.*;
+import frc.robot.commands.shooter.*;
+import frc.robot.commands.training.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.shooter.*;
+import frc.robot.training.*;
+import frc.robot.training.protocol.*;
+import frc.robot.training.protocol.generic.*;
+import frc.robot.util.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -36,15 +43,23 @@ public class RobotContainer {
 
 
     // Define main joystick
-    private final Joystick             joystick_main;
+    private final Joystick             joystick0;
+    private final Joystick             joystick1;
 
     HashMap<String, NetworkTableEntry> shuffleboard;
+
+    private NetworkClient              trainerClient;
+    private TrainerContext             trainerContext;
+    private TrainerDashboard           trainerDashboard;
+
+
 
     /**
      * The container for the robot. Contains subsystems, IO devices, and commands.
      */
     public RobotContainer() {
-        joystick_main = new Joystick(0);
+        joystick0 = new Joystick(0);
+        joystick1 = new Joystick(1);
 
         colour = new Colour();
         flywheel = new ShooterFlywheel();
@@ -53,33 +68,95 @@ public class RobotContainer {
         limelight = new Limelight();
 
         shuffleboard = new HashMap<String, NetworkTableEntry>();
+
         ShuffleboardTab tab = Shuffleboard.getTab("Design Testing");
         ShuffleboardLayout layout = tab.getLayout("Controls", BuiltInLayouts.kList);
-        shuffleboard.put("upperFlywheelSpeed", layout.add("Upper Flywheel RPM", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 6000)).getEntry());
-        shuffleboard.put("lowerFlywheelSpeed", layout.add("Lower Flywheel RPM", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 6000)).getEntry());
-        shuffleboard.put("preshooterSpeed", layout.add("Preshooter RPM", 0).withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 6000)).getEntry());
-        shuffleboard.put("indexerSpeed", layout.add("indexer RPM", 0).withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 1)).getEntry());
 
-        tab.add("Toggle Flywheel and Preshooter", new ToggleShooterAndPreshooter(flywheel, indexer));
-        tab.add("Toggle Indexer", new ToggleIndexerIntake(indexer));
-        tab.add("Toggle System", new ToggleSystem(flywheel, indexer));
+        shuffleboard.put("upperFlywheelSpeed", layout.add("Upper Flywheel RPM", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 0, "max", 6000))
+            .getEntry());
+
+        shuffleboard.put("lowerFlywheelSpeed", layout.add("Lower Flywheel RPM", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 0, "max", 6000))
+            .getEntry());
+
+        shuffleboard.put("preshooterSpeed", layout.add("Preshooter RPM", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 0, "max", 6000))
+            .getEntry());
+
+        shuffleboard.put("indexerSpeed", layout.add("indexer RPM", 0)
+            .withWidget(BuiltInWidgets.kNumberSlider)
+            .withProperties(Map.of("min", 0, "max", 1))
+            .getEntry());
+
+        try {
+            configureTraining();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         configureButtonBindings();
     }
 
-    /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by
-     * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-     * it to a {@link
-     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     */
+    private void configureTraining() throws IOException {
+		SendableContext context = new SendableContext();
+            context.registerSendable(ValueSendable.class);
+            context.registerSendable(KeyValueSendable.class);
+            context.registerSendable(StringSendable.class);
+			  
+		NetworkSocket socket = NetworkSocket.create(Constants.Training.TRAINER_HOSTNAME);
+
+		trainerClient = new NetworkClient(socket, context);
+		trainerContext = new TrainerContext(
+			new Setpoint(1000, new Range(0, 6000)),
+            new ShooterModel(0.0, 0.0, 0.0, 0.0, Constants.Shooter.DISTANCE_RANGE, Constants.Shooter.SPEED_RANGE)
+		);
+		trainerDashboard = new TrainerDashboard(trainerContext);
+    }
+
     private void configureButtonBindings() {
+        joystick0.getButton(ButtonType.kA)
+            .whileHeld(new TrainerRunShooter(limelight, turret, flywheel, indexer, trainerDashboard, trainerContext));
+
+        joystick0.getButton(ButtonType.kLeftBumper)
+            .whileHeld(new SpinIndexer(indexer, -1));
+
+        joystick0.getButton(ButtonType.kRightBumper)
+            .whileHeld(new SpinIndexer(indexer, 1));
+
+        joystick1.getButton(ButtonType.kX)
+            .whenPressed(new BranchTargetSetpoint(trainerDashboard, trainerContext, BranchType.BRANCH_LEFT));
+		
+        joystick1.getButton(ButtonType.kB)
+            .whenPressed(new BranchTargetSetpoint(trainerDashboard, trainerContext, BranchType.BRANCH_RIGHT));
+
+        joystick1.getButton(ButtonType.kRightBumper)
+		    .whenPressed(new BranchTargetSetpoint(trainerDashboard, trainerContext, BranchType.BRANCH_CENTER));
+
+        joystick1.getButton(ButtonType.kLeftBumper)
+		    .whenPressed(new RequestModelUpdate(trainerDashboard, trainerClient, trainerContext));
+
+        joystick1.getButton(ButtonType.kY)
+            .whenPressed(new FlipTargetSetpoint(trainerDashboard, trainerContext));
+        
+        joystick1.getButton(ButtonType.kStart)
+            .whenPressed(new SubmitSetpointData(trainerDashboard, trainerClient, trainerContext));
+
+        joystick1.getButton(ButtonType.kLeftStick)
+            .whenPressed(new ResetTargetSetpoint(trainerDashboard, trainerContext));
+
+        joystick1.getButton(ButtonType.kA)
+            .whileHeld(new TrainerLookShooter(limelight, turret, trainerDashboard, trainerContext))
+            .whenReleased(new RotateTurret(turret, 0));
+
+        joystick1.getButton(ButtonType.kStart)
+            .whenPressed(new UndoTargetSetpoint(trainerDashboard, trainerContext));    
+
+        joystick1.getButton(ButtonType.kStart)
+            .whenPressed(new UndoTargetSetpoint(trainerDashboard, trainerContext));
     }
 
     /**
@@ -88,9 +165,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
         return new CommandBase() { };
     }
-
-
 }

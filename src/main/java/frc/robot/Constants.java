@@ -103,7 +103,8 @@ public final class Constants {
     };
 
     public static final class Training {
-        public static final Range DISTANCE_RANGE = new Range(0.0, 20);
+        public static final Range  DISTANCE_RANGE = new Range(0.0, 20);
+        public static final String TRAINER_HOSTNAME = "10.54.9.150";
     }
     
     public static final class Shooter {
