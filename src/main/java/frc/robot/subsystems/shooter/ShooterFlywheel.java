@@ -132,7 +132,7 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
         if (!enabled) return;
 
         // 600 since its rotation speed is in position change/100ms
-        mot_lower.set(ControlMode.Velocity, lowerTarget * FLYWHEEL_ROTATION_RATIO);
+        mot_lower.set(ControlMode.Velocity, target * FLYWHEEL_ROTATION_RATIO);
         lowerTarget = target;
     }
 
@@ -144,7 +144,7 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
     public void setUpperTarget(double target) {
         if (!enabled) return;
         // 600 since its rotation speed is in position change/100ms
-        mot_upper.set(ControlMode.Velocity, upperTarget * FLYWHEEL_ROTATION_RATIO);
+        mot_upper.set(ControlMode.Velocity, target * FLYWHEEL_ROTATION_RATIO);
         upperTarget = target;
     }
 

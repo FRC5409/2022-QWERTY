@@ -140,7 +140,7 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
 
         // TODO add safetys
         controller_main.setReference(
-            Constants.Turret.LIMITS.clamp(MOTOR_ROTATION_RATIO * target), 
+            Constants.Turret.LIMITS.clamp(MOTOR_ROTATION_RATIO * value), 
             CANSparkMax.ControlType.kPosition);
         
         target = value;
