@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.Gains;
+import frc.robot.util.MotorUtils;
 import frc.robot.util.Toggleable;
 
 /**
@@ -29,8 +30,8 @@ import frc.robot.util.Toggleable;
  * @author Akil Pathiranage, Keith Davies
  */
 public class ShooterTurret extends SubsystemBase implements Toggleable {
-    public static double MOTOR_ROTATION_RATIO = (Constants.Turret.GEAR_RATIO / 360);
-    public static double MOTOR_TARGET_RATIO = 1 / MOTOR_ROTATION_RATIO;
+    public static final double MOTOR_ROTATION_RATIO = (Constants.Shooter.GEAR_RATIO / 360);
+    public static final double MOTOR_TARGET_RATIO = 1 / MOTOR_ROTATION_RATIO;
 
     // private WPI_TalonFX mot_main;
     private CANSparkMax                        mot_main;
@@ -111,7 +112,6 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
         }
 
 
-
         setGains(
             new Gains(    
                 fields.get("p").getDouble(0), 
@@ -154,9 +154,9 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
     public void setRotationTarget(double value) {
         if (!enabled) return;
 
-        // TODO add safetys
+        // TODO add safety
         controller_main.setReference(
-            Constants.Turret.LIMITS.clamp(MOTOR_ROTATION_RATIO * value), 
+            MOTOR_ROTATION_RATIO * Constants.Shooter.ROTATION_RANGE.clamp(value), 
             CANSparkMax.ControlType.kPosition);
         
         target = value;
@@ -190,10 +190,7 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
     }
 
     public void setGains(Gains gains) {
-        controller_main.setP(gains.P);
-        controller_main.setI(gains.I);
-        controller_main.setD(gains.D);
-        controller_main.setFF(gains.F);
+        MotorUtils.setGains(controller_main, gains);
     }
 
     
