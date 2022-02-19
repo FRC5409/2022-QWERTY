@@ -7,9 +7,9 @@ package frc.robot.util;
  * 
  * @author Keith Davies
  */
-public final class Range<T extends Number & Comparable<T>> {
-    private final T _min;
-    private final T _max;
+public final class Range {
+    private final double _min;
+    private final double _max;
 
     /**
      * Constructs a range.
@@ -17,19 +17,14 @@ public final class Range<T extends Number & Comparable<T>> {
      * @param v1 First value
      * @param v2 Second value
      */
-    public Range(T v1, T v2) {
-        if (v1.compareTo(v2) > 0) {
+    public Range(double v1, double v2) {
+        if (v1 > v2) {
             _min = v2;
             _max = v1;
         } else {
             _min = v1;
             _max = v2;
         }
-    }
-
-    public Range(Range<T> copy) {
-        _min = copy._min;
-        _max = copy._max;
     }
 
     /**
@@ -42,13 +37,8 @@ public final class Range<T extends Number & Comparable<T>> {
      * 
      * @return      The clamped value.
      */
-    public static <T extends Number & Comparable<T>> T clamp(T min, T value, T max) {
-        if (max.compareTo(value) > 0)
-            return max;
-        else if (min.compareTo(value) < 0)
-            return min;
-        else
-            return value;
+    public static double clamp(double min, double value, double max) {
+        return (value > max) ? max : ((value < min) ? min : value);
     }
 
     /**
@@ -58,15 +48,19 @@ public final class Range<T extends Number & Comparable<T>> {
      * 
      * @return The clamped value.
      */
-    public double normalize(T value) {
-        if (_max.compareTo(value) > 0)
-            return 1.0;
-        else if (_min.compareTo(value) < 0)
-            return 0.0;
-        else {
-            final double x = _min.doubleValue();
-            return (value.doubleValue() - x) / (_max.doubleValue() - x);
-        }
+    public double normalize(double value) {
+        return (value > _max) ? 1.0 : ((value < _min) ? 0.0 : (value - _min) / (_max - _min));
+    }
+
+    /**
+     * Normalizes a value [0, 1] to this range [min, max]
+     * 
+     * @param value The value
+     * 
+     * @return The clamped value.
+     */
+    public double scale(double value) {
+        return (value > 1.0) ? _max : ((value < 0.0) ? _min : _min + value * (_max - _min));
     }
 
     /**
@@ -76,16 +70,8 @@ public final class Range<T extends Number & Comparable<T>> {
      * 
      * @return      The clamped value.
      */
-    public T clamp(T value) {
+    public double clamp(double value) {
         return clamp(_min, value, _max);
-    }
-
-    public T min() {
-        return _min;
-    }
-
-    public T max() {
-        return _max;
     }
 
     /**
@@ -95,11 +81,27 @@ public final class Range<T extends Number & Comparable<T>> {
      * @return Whether or not the value fit's
      *         within this range.
      */
-    public boolean contains(T value, boolean inclusive) {
-        return (inclusive ? (_min.compareTo(value) >= 0  && _max.compareTo(value) <= 0) : (_min.compareTo(value) > 0  && _max.compareTo(value) < 0));
+    public boolean contains(double value, boolean inclusive) {
+        return (inclusive ? (value >= _min  && value <= _max) : (value >= _min  && value <= _max));
     } 
 
-    public boolean contains(T value) {
+    public boolean contains(double value) {
         return contains(value, true);
+    }
+
+    public double min() {
+        return _min;
+    }
+
+    public double max() {
+        return _max;
+    }
+
+    public double magnitude() {
+        return _max - _min;
+    }
+
+    public double mid() {
+        return (_max  + _min) * 0.5;
     }
 }
