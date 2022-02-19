@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.ShooterModel;
 
 public class TrainerDashboard {
-    private final TrainingContext _context;
+    private final TrainerContext _context;
 
-    public TrainerDashboard(TrainingContext context) {
+    public TrainerDashboard(TrainerContext context) {
         _context = context;
     }
 

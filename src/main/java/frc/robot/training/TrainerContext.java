@@ -1,20 +1,14 @@
 package frc.robot.training;
 
-import frc.robot.Constants;
 import frc.robot.util.ShooterModel;
 
-public class TrainingContext {
+public class TrainerContext {
     private ShooterModel _model;
     private Setpoint _target;
     private double _distance;
 
-    public TrainingContext(Setpoint initialTarget) {
-        _model = new ShooterModel(
-            0.0, 0.0, 0.0, 0.0,
-            Constants.Shooter.DISTANCE_RANGE,
-            Constants.Shooter.SPEED_RANGE
-        );
-
+    public TrainerContext(Setpoint initialTarget, ShooterModel model) {
+        _model = model;
         _target = initialTarget;
         _distance = 0.0;
     }
