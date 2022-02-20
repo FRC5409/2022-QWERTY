@@ -30,13 +30,16 @@ public final class Constants {
 
     public static final class ShooterFlywheel {
         public static final int UPPER_MOTOR_ID = 10;
-
         public static final int LOWER_MOTOR_ID = 7;
+        public static final int FEEDER_MOTOR_ID = 30;
+
 
         //in RPM
         public static final int SHOOTER_TOLERANCE = 240;
+        public static final int FEEDER_TOLERANCE = 100;
         public static final int rpmTolerance = 1;
 
+        public static final Gains FEEDER_GAINS = new Gains(0.0001, 0.0, 0.0, 0.00017);
         public static final Gains UPPER_GAINS = new Gains(0.29873, 0, 0, 0.044265063);
         public static final Gains LOWER_GAINS = new Gains(0.011, 0, 0, 0.047293811);
     }
