@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.base.StateCommandBase;
-import frc.robot.subsystems.IndexerProto;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Limelight.TargetType;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
@@ -29,7 +29,7 @@ public class TrainerRunShooterState extends StateCommandBase {
     private final ShooterFlywheel flywheel;
     private final ShooterTurret turret;
     private final Limelight limelight;
-    private final IndexerProto indexer;
+    private final Indexer indexer;
     private final TrainerDashboard dashboard;
     private final TrainerContext context;
 
@@ -37,7 +37,7 @@ public class TrainerRunShooterState extends StateCommandBase {
         Limelight limelight,
         ShooterTurret turret,
         ShooterFlywheel flywheel,
-        IndexerProto indexer,
+        Indexer indexer,
         TrainerDashboard dashboard,
         TrainerContext context
     ) {
@@ -69,7 +69,7 @@ public class TrainerRunShooterState extends StateCommandBase {
 
         if (turret.isTargetReached() && flywheel.isTargetReached()) {
             indexer.spinIndexer(1);
-            indexer.spinPreshooter(4500);
+            flywheel.spinFeeder(4500);
         }
 
         SmartDashboard.putNumber("Active Velocity", flywheel.getVelocity());
@@ -84,8 +84,10 @@ public class TrainerRunShooterState extends StateCommandBase {
     @Override
     public void end(boolean interrupted) {
         flywheel.setVelocityTarget(0);
+
+        //TODO check if this should be disabled or should be stopped. 
+        flywheel.stopFeeder();
         indexer.stopIndexer();
-        indexer.stopPreshooter();
     }
 
     @Override

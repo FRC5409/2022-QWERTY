@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.base.StateCommandBase;
-import frc.robot.subsystems.IndexerProto;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Limelight.TargetType;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
@@ -29,13 +29,13 @@ public class OperateShooterState extends StateCommandBase {
     private final ShooterTurret turret;
     private final Limelight limelight;
     private final ShooterModel model;
-    private final IndexerProto indexer;
+    private final Indexer indexer;
 
     public OperateShooterState(
         Limelight limelight,
         ShooterTurret turret,
         ShooterFlywheel flywheel,
-        IndexerProto indexer,
+        Indexer indexer,
         ShooterModel model
     ) {
         this.limelight = limelight;
@@ -49,7 +49,8 @@ public class OperateShooterState extends StateCommandBase {
 
     @Override
     public void initialize() {
-        indexer.spinPreshooter(1);
+        //TODO verify that you want to spin the flywheel at 1 rpm.
+        flywheel.spinFeeder(1);
     }
 
     @Override
@@ -84,7 +85,6 @@ public class OperateShooterState extends StateCommandBase {
     public void end(boolean interrupted) {
         flywheel.setVelocityTarget(0);
         indexer.stopIndexer();
-        indexer.stopPreshooter();
     }
 
     @Override

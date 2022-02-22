@@ -6,10 +6,8 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.base.Joystick;
@@ -37,7 +35,7 @@ import frc.robot.util.*;
 public class RobotContainer {
     private final ShooterFlywheel      flywheel;
     private final Colour               colour;
-    private final IndexerProto         indexer;
+    private final Indexer         indexer;
     private final Limelight            limelight;
     private final ShooterTurret        turret;
 
@@ -63,34 +61,10 @@ public class RobotContainer {
 
         colour = new Colour();
         flywheel = new ShooterFlywheel();
-        indexer = new IndexerProto();
+        indexer = new Indexer();
         turret = new ShooterTurret();
         limelight = new Limelight();
 
-        shuffleboard = new HashMap<String, NetworkTableEntry>();
-
-        ShuffleboardTab tab = Shuffleboard.getTab("Design Testing");
-        ShuffleboardLayout layout = tab.getLayout("Controls", BuiltInLayouts.kList);
-
-        shuffleboard.put("upperFlywheelSpeed", layout.add("Upper Flywheel RPM", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 6000))
-            .getEntry());
-
-        shuffleboard.put("lowerFlywheelSpeed", layout.add("Lower Flywheel RPM", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 6000))
-            .getEntry());
-
-        shuffleboard.put("preshooterSpeed", layout.add("Preshooter RPM", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 6000))
-            .getEntry());
-
-        shuffleboard.put("indexerSpeed", layout.add("indexer RPM", 0)
-            .withWidget(BuiltInWidgets.kNumberSlider)
-            .withProperties(Map.of("min", 0, "max", 1))
-            .getEntry());
 
         try {
             configureTraining();

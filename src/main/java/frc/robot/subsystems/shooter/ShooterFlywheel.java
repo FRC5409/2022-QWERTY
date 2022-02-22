@@ -6,6 +6,11 @@ import java.util.Map;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -30,8 +35,13 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
     
     private final WPI_TalonFX     mot_upper;
     private final WPI_TalonFX     mot_lower;
+
+    private final CANSparkMax     mot_feeder;
+    private final SparkMaxPIDController feeder_controller;
+    private final RelativeEncoder enc_feeder;
     private double                upperTarget;
     private double                lowerTarget;
+    private double                feederTarget;
     private boolean               enabled;
 
     private ShuffleboardTab       tab;
@@ -52,10 +62,21 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
             mot_lower.setInverted(true);
         MotorUtils.setGains(mot_lower, 0, Constants.ShooterFlywheel.LOWER_GAINS);
 
+        mot_feeder = new CANSparkMax(Constants.ShooterFlywheel.FEEDER_MOTOR_ID, MotorType.kBrushless);
+        mot_feeder.setSmartCurrentLimit(20);
+        mot_feeder.setIdleMode(IdleMode.kBrake);
+        mot_feeder.setInverted(true);
+        mot_feeder.burnFlash();
+
+        enc_feeder = mot_feeder.getEncoder();
+        feeder_controller = mot_feeder.getPIDController();
+        MotorUtils.setGains(feeder_controller, Constants.ShooterFlywheel.FEEDER_GAINS);
+
     
         enabled = false;
         upperTarget = 0;
         lowerTarget = 0;
+        feederTarget = 0;
 
         fields = new HashMap<String, NetworkTableEntry>();
 
@@ -116,6 +137,7 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
 
         mot_lower.stopMotor();
         mot_upper.stopMotor();
+        mot_feeder.stopMotor();
     }
 
     public void setVelocityTarget(double target) {
@@ -147,6 +169,20 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
         // 600 since its rotation speed is in position change/100ms
         mot_upper.set(ControlMode.Velocity, target * FLYWHEEL_ROTATION_RATIO);
         upperTarget = target;
+    }
+
+    /**
+     * Method for spinning the feeder to an RPM.
+     * 
+     * @param target Target RPM.
+     */
+    public void spinFeeder(double target) {
+
+        if(!enabled) return;
+
+        feederTarget = target;
+        feeder_controller.setReference(feederTarget, CANSparkMax.ControlType.kVelocity);
+
     }
 
     /**
@@ -210,6 +246,21 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
      */
     public boolean isEnabled() {
         return enabled;
+    }
+
+    /**
+     * Method for stopping the feeder wheel by calling stop motor.
+     */
+    public void stopFeeder() {
+        mot_feeder.stopMotor();
+    }
+
+    public boolean feederReachedTarget() {
+        return Math.abs(feederTarget - getFeederRpm()) <= Constants.ShooterFlywheel.FEEDER_TOLERANCE;
+    }
+
+    private double getFeederRpm() {
+        return enc_feeder.getVelocity();
     }
 
 }

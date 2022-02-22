@@ -2,7 +2,7 @@ package frc.robot.commands.shooter;
 
 import frc.robot.Constants;
 import frc.robot.base.StateCommandGroup;
-import frc.robot.subsystems.IndexerProto;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterTurret;
@@ -21,7 +21,7 @@ public final class OperateShooter extends StateCommandGroup {
     private final ShooterFlywheel flywheel;
     private final ShooterTurret   turret;
     private final Limelight       limelight;
-    private final IndexerProto    indexer;
+    private final Indexer    indexer;
 
     private final ShooterModel    model;
 
@@ -29,7 +29,7 @@ public final class OperateShooter extends StateCommandGroup {
         Limelight limelight,
         ShooterTurret turret,
         ShooterFlywheel flywheel,
-        IndexerProto indexer,
+        Indexer indexer,
         ShooterModel model
     ) {
         this.flywheel = flywheel;
@@ -54,8 +54,7 @@ public final class OperateShooter extends StateCommandGroup {
         limelight.enable();
         turret.enable();
         
-        indexer.enableIndexer();
-        indexer.enablePreshooter();
+        indexer.enable();
         
         flywheel.setVelocityTarget(
             model.calculate(Constants.Shooter.PRE_SHOOTER_DISTANCE)
@@ -73,7 +72,6 @@ public final class OperateShooter extends StateCommandGroup {
         turret.disable();
         limelight.disable();
 
-        indexer.disableIndexer();
-        indexer.disablePreshooter();
+        indexer.disable();
     }
 }

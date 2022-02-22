@@ -4,7 +4,7 @@ import frc.robot.base.StateCommandGroup;
 import frc.robot.commands.shooter.AlignShooterState;
 import frc.robot.commands.shooter.SearchShooterState;
 import frc.robot.commands.shooter.SweepShooterState;
-import frc.robot.subsystems.IndexerProto;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterTurret;
@@ -23,13 +23,13 @@ public final class TrainerRunShooter extends StateCommandGroup {
     private final ShooterFlywheel flywheel;
     private final ShooterTurret   turret;
     private final Limelight       limelight;
-    private final IndexerProto    indexer;
+    private final Indexer    indexer;
 
     public TrainerRunShooter(
         Limelight limelight,
         ShooterTurret turret,
         ShooterFlywheel flywheel,
-        IndexerProto indexer,
+        Indexer indexer,
         TrainerDashboard dashboard,
         TrainerContext context
     ) {
@@ -54,8 +54,7 @@ public final class TrainerRunShooter extends StateCommandGroup {
         turret.enable();
         limelight.enable();
         
-        indexer.enableIndexer();
-        indexer.enablePreshooter();
+        indexer.enable();
 
         super.initialize();
     }
@@ -69,7 +68,7 @@ public final class TrainerRunShooter extends StateCommandGroup {
         turret.disable();
         limelight.disable();
 
-        indexer.stopPreshooter();
-        indexer.stopPreshooter();
+        //TODO check if you want indexer to be disabled.
+        indexer.disable();
     }
 }

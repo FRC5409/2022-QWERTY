@@ -1,15 +1,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IndexerProto;
+import frc.robot.subsystems.Indexer;
 
 public class SpinIndexer extends CommandBase{
 
     double setpoint;
-    IndexerProto m_indexer;
+    Indexer m_indexer;
 
 
-    public SpinIndexer(IndexerProto subsystem, double setpoint){
+    public SpinIndexer(Indexer subsystem, double setpoint){
         m_indexer = subsystem;
         this.setpoint = setpoint;
         addRequirements(m_indexer);
@@ -17,7 +17,7 @@ public class SpinIndexer extends CommandBase{
 
     @Override
     public void initialize() {
-        m_indexer.enableIndexer();
+        m_indexer.enable();
     }
 
     @Override

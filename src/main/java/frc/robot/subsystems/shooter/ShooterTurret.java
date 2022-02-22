@@ -114,15 +114,6 @@ public class ShooterTurret extends SubsystemBase implements Toggleable {
         //     fields.get("hood").setString("Off");
         // }
 
-
-        // setGains(
-        //     new Gains(    
-        //         fields.get("p").getDouble(0), 
-        //         fields.get("i").getDouble(0),
-        //         fields.get("d").getDouble(0),
-        //         fields.get("f").getDouble(0)
-        //     )
-        // );
     }
 
     /**
