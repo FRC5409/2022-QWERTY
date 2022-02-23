@@ -4,7 +4,6 @@ import frc.robot.base.StateCommandGroup;
 import frc.robot.commands.shooter.AlignShooterState;
 import frc.robot.commands.shooter.SearchShooterState;
 import frc.robot.commands.shooter.SweepShooterState;
-import frc.robot.subsystems.IndexerProto;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.shooter.ShooterTurret;
 import frc.robot.training.TrainerContext;

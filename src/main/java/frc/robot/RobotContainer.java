@@ -126,10 +126,7 @@ public class RobotContainer {
             .whileHeld(new TrainerLookShooter(limelight, turret, trainerDashboard, trainerContext))
             .whenReleased(new RotateTurret(turret, 0));
 
-        joystick1.getButton(ButtonType.kStart)
-            .whenPressed(new UndoTargetSetpoint(trainerDashboard, trainerContext));    
-
-        joystick1.getButton(ButtonType.kStart)
+        joystick1.getButton(ButtonType.kBack)
             .whenPressed(new UndoTargetSetpoint(trainerDashboard, trainerContext));
     }
 

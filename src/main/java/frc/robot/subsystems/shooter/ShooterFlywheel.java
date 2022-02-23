@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.Gains;
@@ -102,6 +103,8 @@ public final class ShooterFlywheel extends SubsystemBase implements Toggleable {
         fields.put("ud",     pidTuningLayout.add("Upper D Const: ", Constants.ShooterFlywheel.UPPER_GAINS.D).getEntry());
         fields.put("uf",     pidTuningLayout.add("Upper F const: ", Constants.ShooterFlywheel.UPPER_GAINS.F).getEntry());
         fields.put("change", pidTuningLayout.add("Change values", false).withWidget(BuiltInWidgets.kToggleButton).getEntry());
+    
+        SmartDashboard.putNumber("Feeder Velocity", enc_feeder.getVelocity());
     }
 
     /**

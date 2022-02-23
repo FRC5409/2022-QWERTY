@@ -49,8 +49,7 @@ public class OperateShooterState extends StateCommandBase {
 
     @Override
     public void initialize() {
-        //TODO verify that you want to spin the flywheel at 1 rpm.
-        flywheel.spinFeeder(1);
+        flywheel.spinFeeder(4500);
     }
 
     @Override
@@ -65,7 +64,7 @@ public class OperateShooterState extends StateCommandBase {
 
         // Continue aligning shooter
         if (Math.abs(target.x) > Constants.Vision.ALIGNMENT_THRESHOLD)
-            turret.setRotationTarget(turret.getRotation() + target.x);
+            turret.setRotationTarget(turret.getRotation() + target.x* Constants.Vision.ROTATION_P);
 
         if (turret.isTargetReached() && flywheel.isTargetReached()) {
             indexer.spinIndexer(1);

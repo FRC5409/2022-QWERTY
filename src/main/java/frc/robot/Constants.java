@@ -135,7 +135,7 @@ public final class Constants {
         );
 
         public static final Range DISTANCE_RANGE = new Range(
-            10, 33
+            0, 25
         );
 
         
@@ -177,7 +177,7 @@ public final class Constants {
         public static final double SHOOTER_MAX_SWEEEP = 2;
     
         public static final Gains TURRET_GAINS = new Gains(
-            0.35d, 0.0, 1.852d, 0
+            /*0.35d*/ 0.15d, 0.0, 1.852d, 0
         );
 
         public static final double ALIGNMENT_MAX_TIME = 2;
@@ -190,19 +190,23 @@ public final class Constants {
         
         public static final double LIMELIGHT_HEIGHT = 39.5d/12.0d;
 
-        public static final double LIMELIGHT_PITCH = 90 - 81.5;//13.4;//13.15
+        public static final double LIMELIGHT_PITCH = 90 - 78.2;//13.4;//13.15
 
         public static final double ACQUISITION_DELAY = 0.35;
 
-        public static final double ALIGNMENT_THRESHOLD = 1.5;
+        public static final double ALIGNMENT_THRESHOLD = 1.13333;
+
+        protected static double DISTANCE_OFFSET = - 2.0;
 
         public static final Equation DISTANCE_FUNCTION = new Equation() {
             private final double height = Math.abs(TARGET_HEIGHT - LIMELIGHT_HEIGHT);
             @Override
             public double calculate(double x) {
-                return height / Math.tan(Math.toRadians(x + Constants.Vision.LIMELIGHT_PITCH));
+                return height / Math.tan(Math.toRadians(x + Constants.Vision.LIMELIGHT_PITCH)) + Constants.Vision.DISTANCE_OFFSET;
             }
             
         };
+
+        public static final double ROTATION_P = 0.10;
     }
 }

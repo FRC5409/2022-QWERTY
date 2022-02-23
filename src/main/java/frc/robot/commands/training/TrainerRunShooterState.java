@@ -65,11 +65,11 @@ public class TrainerRunShooterState extends StateCommandBase {
 
         // Continue aligning shooter
         if (Math.abs(target.x) > Constants.Vision.ALIGNMENT_THRESHOLD)
-            turret.setRotationTarget(turret.getRotation() + target.x);
+            turret.setRotationTarget(turret.getRotation() + target.x* Constants.Vision.ROTATION_P);
 
         if (turret.isTargetReached() && flywheel.isTargetReached()) {
             indexer.spinIndexer(1);
-            flywheel.spinFeeder(4500);
+            flywheel.spinFeeder(4500*1.5);
         }
 
         SmartDashboard.putNumber("Active Velocity", flywheel.getVelocity());
@@ -84,10 +84,6 @@ public class TrainerRunShooterState extends StateCommandBase {
     @Override
     public void end(boolean interrupted) {
         flywheel.setVelocityTarget(0);
-
-        //TODO check if this should be disabled or should be stopped. 
-        flywheel.stopFeeder();
-        indexer.stopIndexer();
     }
 
     @Override
