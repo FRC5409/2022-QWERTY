@@ -33,9 +33,12 @@ public final class Constants {
 
     public final class kDrive{
 
-        public static final int AADL_DRIVE = 2; // Addl Drive (Arcade drive)
-        public static final int C_DRIVE = 3; // Curvature drive
-        public static final int T_DRIVE = 4; // Tank Drive
+        public static final double forwardRampRate = 0.2;
+        public static final double backwardRampRate = 0.1;
+        public static final double forwardTurnRampRate = 0.1;
+        public static final double backwardTurnRampRate = 0.05;
+        
+        
         
     }
 
