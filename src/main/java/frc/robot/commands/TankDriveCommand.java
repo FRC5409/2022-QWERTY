@@ -38,10 +38,10 @@ public class TankDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    leftStick = m_joystick.getLeftY();
-    rightStick = m_joystick.getRightY();
+    leftStick = m_joystick.getLeftY()*-1;
+    rightStick = m_joystick.getRightY()*-1;
 
-    sys_drive.tankDrive(leftStick, rightStick);
+    sys_drive.tankDrive(rightStick, leftStick);
   }
 
   // Called once the command ends or is interrupted.

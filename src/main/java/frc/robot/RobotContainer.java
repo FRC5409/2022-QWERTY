@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final ShooterFlywheel m_flywheel;
+ // private final ShooterFlywheel m_flywheel;
   private final Indexer m_indexer = new Indexer();
   private final DriveTrain sys_DriveTrain;
   private final TankDriveCommand cmd_TankDriveCommand;
@@ -65,7 +65,7 @@ public class RobotContainer {
 
     sys_DriveTrain.setDefaultCommand(cmd_AadilDriveCommand);
 
-    m_flywheel = new ShooterFlywheel();
+    //m_flywheel = new ShooterFlywheel();
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -77,7 +77,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    //but_main_A.whenPressed(new EnableShooter(m_flywheel));
+    but_main_X.toggleWhenPressed(cmd_TankDriveCommand);
   }
 
   /**

@@ -39,9 +39,9 @@ public class AadilDriveCommand extends CommandBase {
   public void execute() {
     leftTrigger = m_joystick.getLeftTriggerAxis();
     rightTrigger = m_joystick.getRightTriggerAxis();
-    lAxis = m_joystick.getLeftX();
+    lAxis = m_joystick.getLeftX()*-1;
 
-    sys_drive.aadilDrive(leftTrigger, rightTrigger, lAxis);
+    sys_drive.aadilDrive(rightTrigger, leftTrigger, lAxis);
   }
 
   // Called once the command ends or is interrupted.

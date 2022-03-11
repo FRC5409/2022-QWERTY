@@ -31,5 +31,12 @@ public final class Constants {
         public static final double unitsPerRotation = 2048;
     }
 
+    public final class kDrive{
+
+        public static final int AADL_DRIVE = 2; // Addl Drive (Arcade drive)
+        public static final int C_DRIVE = 3; // Curvature drive
+        public static final int T_DRIVE = 4; // Tank Drive
+        
+    }
 
 }
