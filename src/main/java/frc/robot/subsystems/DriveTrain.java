@@ -75,18 +75,27 @@ public class DriveTrain extends SubsystemBase {
 
     }
 
-    m_drive.arcadeDrive(accelerate, turn, true);
+    m_drive.arcadeDrive(accelerate, turn*-1, true);
   }
 
   public void tankDrive(final double leftStick, final double rightStick) {
-    m_drive.tankDrive(leftStick, rightStick);
+    m_drive.tankDrive(leftStick*-1, rightStick*-1);
+  }
+  
+  public void arcadeDrive(final double acceleration, final double turn) {
+
+    m_drive.arcadeDrive(acceleration, turn, true);
   }
 
+  public void curvDrive(final double speed, final double turn, final boolean quickTurn) {
+    
+    m_drive.curvatureDrive(speed, turn, quickTurn);
+  }
+  
   public void setRampRate(double rampRate) {
 
     mot_leftFrontDrive.configOpenloopRamp(rampRate);
     mot_rightFrontDrive.configOpenloopRamp(rampRate);
 
   }
-
 }

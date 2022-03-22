@@ -6,15 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.TankDriveCommand;
-import frc.robot.commands.TuningTesting;
-import frc.robot.Constants.ShooterFlywheel;
-import frc.robot.commands.AadilDriveCommand;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.DriveSwitcher;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Indexer;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -25,21 +18,18 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
- // private final ShooterFlywheel m_flywheel;
-  private final Indexer m_indexer = new Indexer();
-  private final DriveTrain sys_DriveTrain;
-  private final TankDriveCommand cmd_TankDriveCommand;
-  private final AadilDriveCommand cmd_AadilDriveCommand;
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final TuningTesting m_TuningTesting = new TuningTesting(m_indexer);
+  private final DriveTrain sys_DriveTrain;
+
+  private final DriveSwitcher cmd_nextDrive;
+  private final DriveSwitcher cmd_previousDrive;
 
   // Define main joystick
   private final XboxController joystick_main; // = new XboxController(0);
   private final JoystickButton but_main_A, but_main_B, but_main_X, but_main_Y, but_main_LBumper, but_main_RBumper,
       but_main_LAnalog, but_main_RAnalog, but_main_Back, but_main_Start;
   
+
       
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -60,12 +50,10 @@ public class RobotContainer {
     but_main_Start = new JoystickButton(joystick_main, XboxController.Button.kStart.value);
 
     sys_DriveTrain = new DriveTrain();
-    cmd_TankDriveCommand = new TankDriveCommand(sys_DriveTrain, joystick_main);
-    cmd_AadilDriveCommand = new AadilDriveCommand(sys_DriveTrain, joystick_main);
 
-    sys_DriveTrain.setDefaultCommand(cmd_AadilDriveCommand);
+    cmd_nextDrive = new DriveSwitcher(sys_DriveTrain, joystick_main, true);
+    cmd_previousDrive = new DriveSwitcher(sys_DriveTrain, joystick_main, false);
 
-    //m_flywheel = new ShooterFlywheel();
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -77,7 +65,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    but_main_X.toggleWhenPressed(cmd_TankDriveCommand);
+    but_main_LAnalog.whenPressed(cmd_nextDrive);
+    but_main_RAnalog.whenPressed(cmd_previousDrive);
   }
 
   /**
@@ -85,8 +74,4 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
-  }
 }

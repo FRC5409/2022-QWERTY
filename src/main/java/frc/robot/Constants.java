@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
+import org.ejml.equation.Variable;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -36,10 +40,8 @@ public final class Constants {
         public static final double forwardRampRate = 0.2;
         public static final double backwardRampRate = 0.1;
         public static final double forwardTurnRampRate = 0.1;
-        public static final double backwardTurnRampRate = 0.05;
-        
-        
-        
+        public static final double backwardTurnRampRate = 0.05;    
+
     }
 
 }
